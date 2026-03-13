@@ -47,6 +47,8 @@ archunit                  = { module = "com.tngtech.archunit:archunit-junit5",  
 testcontainers-junit      = { module = "org.testcontainers:junit-jupiter",                  version.ref = "testcontainers" }
 testcontainers-pg         = { module = "org.testcontainers:postgresql",                     version.ref = "testcontainers" }
 junit-platform-launcher   = { module = "org.junit.platform:junit-platform-launcher" }
+junit-jupiter             = { module = "org.junit.jupiter:junit-jupiter",                    version = "5.12.1" }
+mockito-junit-jupiter     = { module = "org.mockito:mockito-junit-jupiter",                  version = "5.16.1" }
 
 [bundles]
 spring-web                = ["spring-boot-web", "spring-boot-validation", "spring-boot-actuator"]

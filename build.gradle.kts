@@ -1,7 +1,7 @@
 plugins {
     java
-    id("org.springframework.boot") version "4.0.3"
-    id("io.spring.dependency-management") version "1.1.7"
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.mgmt)
 }
 
 group = "com.n1b3lung0"
@@ -10,7 +10,7 @@ description = "gymrat-backend — API to manage gym workouts, exercises and seri
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(25)
+        languageVersion = JavaLanguageVersion.of(libs.versions.java.get().toInt())
     }
 }
 
@@ -25,17 +25,16 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    compileOnly("org.projectlombok:lombok")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-    runtimeOnly("org.postgresql:postgresql")
-    annotationProcessor("org.projectlombok:lombok")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    implementation(libs.spring.boot.jpa)
+    compileOnly(libs.lombok)
+    developmentOnly(libs.spring.boot.devtools)
+    developmentOnly(libs.spring.boot.docker.compose)
+    runtimeOnly(libs.postgresql)
+    annotationProcessor(libs.lombok)
+    testImplementation(libs.spring.boot.test)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 tasks.named<Test>("test") {
     useJUnitPlatform()
 }
-

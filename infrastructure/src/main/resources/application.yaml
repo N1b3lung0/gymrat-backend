@@ -2,9 +2,9 @@ spring:
   application:
     name: gymrat-backend
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/gymrat}
+    username: ${SPRING_DATASOURCE_USERNAME:gymrat}
+    password: ${SPRING_DATASOURCE_PASSWORD:gymrat}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

@@ -1,5 +1,7 @@
 package com.n1b3lung0.gymrat.domain.model;
 
+import com.n1b3lung0.gymrat.domain.event.WorkoutFinished;
+import com.n1b3lung0.gymrat.domain.event.WorkoutStarted;
 import com.n1b3lung0.gymrat.domain.exception.WorkoutAlreadyFinishedException;
 
 import java.time.Instant;
@@ -56,13 +58,15 @@ public class Workout {
     public static Workout create(Instant startWorkout) {
         Objects.requireNonNull(startWorkout, "Workout startWorkout must not be null");
 
-        return new Workout(
+        var workout = new Workout(
                 WorkoutId.generate(),
                 startWorkout,
                 null,
                 new ArrayList<>(),
                 AuditFields.create("system")
         );
+        workout.domainEvents.add(new WorkoutStarted(workout.id, workout.startWorkout));
+        return workout;
     }
 
     // -------------------------------------------------------------------------
@@ -85,6 +89,7 @@ public class Workout {
 
         this.endWorkout = endWorkout;
         this.auditFields = this.auditFields.update("system");
+        domainEvents.add(new WorkoutFinished(this.id, this.endWorkout));
     }
 
     /**

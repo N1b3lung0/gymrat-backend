@@ -1,5 +1,9 @@
 package com.n1b3lung0.gymrat.domain.model;
 
+import com.n1b3lung0.gymrat.domain.event.ExerciseCreated;
+import com.n1b3lung0.gymrat.domain.event.ExerciseDeleted;
+import com.n1b3lung0.gymrat.domain.event.ExerciseUpdated;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -70,8 +74,7 @@ public class Exercise {
     // -------------------------------------------------------------------------
 
     /**
-     * Creates a new {@code Exercise} and emits no domain event yet
-     * (events are added in Step 22 once the event types are defined).
+     * Creates a new {@code Exercise} and emits an {@link ExerciseCreated} event.
      *
      * <p>Prefer {@link Builder} to supply the arguments fluently.
      */
@@ -92,7 +95,7 @@ public class Exercise {
         if (routines == null || routines.isEmpty())
             throw new IllegalArgumentException("Exercise must belong to at least one routine");
 
-        return new Exercise(
+        var exercise = new Exercise(
                 ExerciseId.generate(),
                 name,
                 description,
@@ -105,6 +108,8 @@ public class Exercise {
                 new ArrayList<>(),
                 AuditFields.create("system")
         );
+        exercise.domainEvents.add(new ExerciseCreated(exercise.id, exercise.name));
+        return exercise;
     }
 
     // -------------------------------------------------------------------------
@@ -151,6 +156,15 @@ public class Exercise {
         this.image = image;
         this.video = video;
         this.auditFields = this.auditFields.update("system");
+        domainEvents.add(new ExerciseUpdated(this.id));
+    }
+
+    /**
+     * Soft-deletes this exercise and emits an {@link ExerciseDeleted} event.
+     */
+    public void delete() {
+        this.auditFields = this.auditFields.delete("system");
+        domainEvents.add(new ExerciseDeleted(this.id));
     }
 
     /**

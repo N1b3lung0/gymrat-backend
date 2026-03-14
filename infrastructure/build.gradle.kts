@@ -53,3 +53,9 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    // Run from the project root so Spring Boot Docker Compose finds compose.yaml.
+    // IntelliJ also uses the project root as working dir by default.
+    workingDir = rootProject.projectDir
+}
+

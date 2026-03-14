@@ -1,5 +1,7 @@
 package com.n1b3lung0.gymrat.domain.model;
 
+import com.n1b3lung0.gymrat.domain.exception.InvalidRpeIntensityException;
+
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -89,7 +91,7 @@ public class Series {
         if (repetitionsToDo <= 0)
             throw new IllegalArgumentException("repetitionsToDo must be positive");
         if (intensity < 1 || intensity > 10)
-            throw new IllegalArgumentException("intensity must be between 1 and 10 (RPE scale)");
+            throw new InvalidRpeIntensityException(intensity);
         if (serialNumber <= 0)
             throw new IllegalArgumentException("serialNumber must be positive");
 

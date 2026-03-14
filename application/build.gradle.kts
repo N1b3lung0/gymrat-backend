@@ -1,5 +1,5 @@
 // Application module — use cases, commands, queries, ports.
-// Only allowed dependency: :domain. Must never import Spring, JPA, or infrastructure.
+// Only allowed production dependency: :domain. Test dependencies (e.g. JUnit, Mockito) are allowed. Must never import Spring, JPA, or infrastructure in main code.
 plugins {
     java
 }

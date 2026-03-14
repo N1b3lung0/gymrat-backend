@@ -23,6 +23,7 @@ spring-boot-actuator      = { module = "org.springframework.boot:spring-boot-sta
 spring-boot-devtools      = { module = "org.springframework.boot:spring-boot-devtools" }
 spring-boot-docker-compose = { module = "org.springframework.boot:spring-boot-docker-compose" }
 spring-boot-test          = { module = "org.springframework.boot:spring-boot-starter-test" }
+spring-boot-testcontainers = { module = "org.springframework.boot:spring-boot-testcontainers" }
 
 # — Database
 postgresql                = { module = "org.postgresql:postgresql",                          version.ref = "postgresql" }

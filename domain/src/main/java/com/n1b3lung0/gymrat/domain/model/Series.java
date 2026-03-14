@@ -1,5 +1,6 @@
 package com.n1b3lung0.gymrat.domain.model;
 
+import com.n1b3lung0.gymrat.domain.event.SeriesCreated;
 import com.n1b3lung0.gymrat.domain.exception.InvalidRpeIntensityException;
 
 import java.math.BigDecimal;
@@ -95,7 +96,7 @@ public class Series {
         if (serialNumber <= 0)
             throw new IllegalArgumentException("serialNumber must be positive");
 
-        return new Series(
+        var series = new Series(
                 SeriesId.generate(),
                 serialNumber,
                 repetitionsToDo,
@@ -108,6 +109,8 @@ public class Series {
                 exerciseSeriesId,
                 AuditFields.create("system")
         );
+        series.domainEvents.add(new SeriesCreated(series.id, series.exerciseSeriesId, series.serialNumber));
+        return series;
     }
 
     // -------------------------------------------------------------------------

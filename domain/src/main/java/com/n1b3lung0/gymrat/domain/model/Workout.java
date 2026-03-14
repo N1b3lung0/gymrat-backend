@@ -1,5 +1,7 @@
 package com.n1b3lung0.gymrat.domain.model;
 
+import com.n1b3lung0.gymrat.domain.exception.WorkoutAlreadyFinishedException;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -77,7 +79,7 @@ public class Workout {
     public void finish(Instant endWorkout) {
         Objects.requireNonNull(endWorkout, "endWorkout must not be null");
         if (this.endWorkout != null)
-            throw new IllegalStateException("Workout " + id + " is already finished");
+            throw new WorkoutAlreadyFinishedException(id);
         if (endWorkout.isBefore(startWorkout))
             throw new IllegalArgumentException("endWorkout must not be before startWorkout");
 
@@ -94,7 +96,7 @@ public class Workout {
     public void addExerciseSeries(ExerciseSeriesId exerciseSeriesId) {
         Objects.requireNonNull(exerciseSeriesId, "exerciseSeriesId must not be null");
         if (this.endWorkout != null)
-            throw new IllegalStateException("Cannot add exercises to a finished workout");
+            throw new WorkoutAlreadyFinishedException(id);
         if (exerciseSeriesIds.contains(exerciseSeriesId))
             throw new IllegalArgumentException(
                     "ExerciseSeries " + exerciseSeriesId + " is already part of workout " + id);

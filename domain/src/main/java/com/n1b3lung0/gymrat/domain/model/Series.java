@@ -22,13 +22,13 @@ public class Series {
 
     private final SeriesId id;
     private final int serialNumber;
-    private final int repetitionsToDo;
+    private int repetitionsToDo;
     private Integer repetitionsDone;
-    private final int intensity;
-    private final BigDecimal weight;
+    private int intensity;
+    private BigDecimal weight;
     private Instant startSeries;
     private Instant endSeries;
-    private final RestTime restTime;
+    private RestTime restTime;
     private final ExerciseSeriesId exerciseSeriesId;
     private AuditFields auditFields;
 
@@ -126,6 +126,41 @@ public class Series {
         Objects.requireNonNull(startSeries, "startSeries must not be null");
         this.startSeries = startSeries;
         this.auditFields = this.auditFields.update("system");
+    }
+
+    /**
+     * Updates all mutable fields of this series set.
+     *
+     * @param repetitionsToDo  new planned repetitions; must be positive
+     * @param repetitionsDone  actual repetitions performed; may be {@code null}
+     * @param intensity        new RPE value 1–10
+     * @param weight           new load in kg; may be {@code null} for bodyweight
+     * @param startSeries      timestamp when the set started; may be {@code null}
+     * @param endSeries        timestamp when the set ended; may be {@code null}
+     * @param restTime         new rest period
+     */
+    public void update(
+            int repetitionsToDo,
+            Integer repetitionsDone,
+            int intensity,
+            BigDecimal weight,
+            Instant startSeries,
+            Instant endSeries,
+            RestTime restTime) {
+        if (repetitionsToDo <= 0)
+            throw new IllegalArgumentException("repetitionsToDo must be positive");
+        if (intensity < 1 || intensity > 10)
+            throw new InvalidRpeIntensityException(intensity);
+        Objects.requireNonNull(restTime, "restTime must not be null");
+
+        this.repetitionsToDo  = repetitionsToDo;
+        this.repetitionsDone  = repetitionsDone;
+        this.intensity        = intensity;
+        this.weight           = weight;
+        this.startSeries      = startSeries;
+        this.endSeries        = endSeries;
+        this.restTime         = restTime;
+        this.auditFields      = this.auditFields.update("system");
     }
 
     /**

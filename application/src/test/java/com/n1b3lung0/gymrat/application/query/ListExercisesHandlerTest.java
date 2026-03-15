@@ -55,7 +55,7 @@ class ListExercisesHandlerTest {
         void shouldReturnPageResult() {
             var pageRequest = PageRequest.of(0, 10);
             var expected = new PageResult<>(List.of(summaryView()), 0, 10, 1L);
-            when(exerciseQueryPort.findAll(pageRequest)).thenReturn(expected);
+            when(exerciseQueryPort.findAllSummaries(pageRequest)).thenReturn(expected);
 
             var result = handler.execute(new ListExercisesQuery(pageRequest));
 
@@ -68,19 +68,19 @@ class ListExercisesHandlerTest {
         @DisplayName("should delegate to ExerciseQueryPort with the given PageRequest")
         void shouldDelegateToQueryPort() {
             var pageRequest = PageRequest.of(0, 20, "name", true);
-            when(exerciseQueryPort.findAll(pageRequest))
+            when(exerciseQueryPort.findAllSummaries(pageRequest))
                     .thenReturn(new PageResult<>(List.of(), 0, 20, 0L));
 
             handler.execute(new ListExercisesQuery(pageRequest));
 
-            verify(exerciseQueryPort).findAll(pageRequest);
+            verify(exerciseQueryPort).findAllSummaries(pageRequest);
         }
 
         @Test
         @DisplayName("should return empty page when no exercises exist")
         void shouldReturnEmptyPage_whenNoResults() {
             var pageRequest = PageRequest.of(0, 10);
-            when(exerciseQueryPort.findAll(pageRequest))
+            when(exerciseQueryPort.findAllSummaries(pageRequest))
                     .thenReturn(new PageResult<>(List.of(), 0, 10, 0L));
 
             var result = handler.execute(new ListExercisesQuery(pageRequest));

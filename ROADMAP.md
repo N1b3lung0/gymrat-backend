@@ -42,14 +42,15 @@ Series
 
 | Phase | Steps | Description |
 |-------|-------|-------------|
-| 0 | 1–5 | Project restructure to multi-module Gradle |
-| 1 | 6–15 | Domain layer: enums, value objects, domain models |
+| 0 | 1–5   | Project restructure to multi-module Gradle |
+| 1 | 6–15  | Domain layer: enums, value objects, domain models |
 | 2 | 16–22 | Domain layer: exceptions, repository ports, domain events |
 | 3 | 23–32 | Application layer: commands, queries, use case ports, handlers |
 | 4 | 33–47 | Infrastructure layer: JPA entities, Flyway migrations, JPA adapters |
-| 5 | 48–60 | Infrastructure layer: REST controllers, DTOs, mappers, config beans |
-| 6 | 61–70 | Cross-cutting: exception handler, OpenAPI, observability, data seeds |
-| 7 | 71–80 | Testing: unit tests, slice tests, architecture tests |
+| 5 | 48–58 | Infrastructure layer: REST controllers, DTOs, mappers, config beans |
+| 6 | 59–62 | Cross-cutting: exception handler, OpenAPI, observability, data seeds |
+| 7 | 63–70 | Testing: unit tests, slice tests, architecture tests |
+| 8 | 71–80 | End-to-end: full integration tests, security, performance, deployment |
 
 ---
 
@@ -916,7 +917,7 @@ Endpoints:
 
 ---
 
-## Phase 5 (cont.) — Config Beans (Dependency Wiring)
+## Phase 5 (cont.) — Config Beans and Event Publisher (Steps 56–58)
 
 ### Step 56 — Create `ExerciseConfig`
 
@@ -1114,6 +1115,147 @@ Rules:
 - `controllersOnlyDependOnUseCasePorts` — never on concrete Handler classes
 
 **Verify:** `./gradlew :infrastructure:test --tests "*ArchitectureTest"` — all rules pass.
+
+---
+
+---
+
+## Phase 8 — End-to-End: Integration, Security & Deployment
+
+### Step 71 — Full integration test: Exercise happy path
+
+**Module:** `:infrastructure`  
+**File:** `ExerciseIntegrationTest.java`  
+**Annotation:** `@SpringBootTest(webEnvironment = RANDOM_PORT)` + Testcontainers PostgreSQL
+
+Tests (real HTTP via `TestRestTemplate`):
+- `shouldCreateAndRetrieveExercise_whenValidRequest()`
+- `shouldReturn409_whenDuplicateExerciseName()`
+- `shouldSoftDeleteExercise_andNotReturnItAfterwards()`
+
+**Verify:** `./gradlew :infrastructure:test --tests "*ExerciseIntegrationTest"` — green.
+
+---
+
+### Step 72 — Full integration test: Workout + ExerciseSeries + Series happy path
+
+**Module:** `:infrastructure`  
+**File:** `WorkoutIntegrationTest.java`
+
+Full flow:
+1. Create a Workout → `201`
+2. Add an Exercise to the Workout (ExerciseSeries) → `201`
+3. Record 3 Series within the ExerciseSeries → `201` each
+4. Verify `GET /api/v1/workouts/{id}` returns the full workout with exercise series
+5. Verify `serialNumber` is auto-incremented (1, 2, 3)
+6. Finish the Workout → `200`
+
+**Verify:** `./gradlew :infrastructure:test --tests "*WorkoutIntegrationTest"` — green.
+
+---
+
+### Step 73 — Full integration test: soft-delete cascade behaviour
+
+**Module:** `:infrastructure`  
+**File:** `SoftDeleteIntegrationTest.java`
+
+Tests:
+- Deleting a Workout soft-deletes it; `GET /api/v1/workouts/{id}` returns `404`
+- Deleting an Exercise soft-deletes it; exercises still retrievable by ID before delete
+- Deleted resources do not appear in paginated list responses
+
+**Verify:** `./gradlew :infrastructure:test --tests "*SoftDeleteIntegrationTest"` — green.
+
+---
+
+### Step 74 — Validation integration tests
+
+**Module:** `:infrastructure`  
+**File:** `ValidationIntegrationTest.java`
+
+Tests:
+- `POST /api/v1/exercises` with blank name → `422` with `application/problem+json` body listing field errors
+- `POST /api/v1/exercises` with invalid level enum → `400`
+- `POST /api/v1/workouts/{workoutId}/exercises/{esId}/series` with `intensity=11` → `422`
+- `PATCH /api/v1/workouts/{id}/finish` when already finished → `422`
+
+**Verify:** `./gradlew :infrastructure:test --tests "*ValidationIntegrationTest"` — green.
+
+---
+
+### Step 75 — Pagination and sorting integration tests
+
+**Module:** `:infrastructure`  
+**File:** `PaginationIntegrationTest.java`
+
+Uses seed data (V6 migration).
+
+Tests:
+- `GET /api/v1/exercises?page=0&size=2` → returns 2 items, `totalElements >= 5`
+- `GET /api/v1/exercises?page=0&size=10&sortBy=name&ascending=true` → results in alphabetical order
+- `GET /api/v1/workouts?page=0&size=1` → returns 1 item
+- Empty page beyond total → `content: []`, no error
+
+**Verify:** `./gradlew :infrastructure:test --tests "*PaginationIntegrationTest"` — green.
+
+---
+
+### Step 76 — Add Spring Security basic authentication skeleton
+
+**Module:** `:infrastructure`  
+**Package:** `...config`  
+**File:** `SecurityConfig.java`
+
+- Add `spring-boot-starter-security` to `infrastructure/build.gradle.kts`
+- `SecurityConfig` with `SecurityFilterChain`: permit `GET /actuator/health`, `GET /swagger-ui/**`, `GET /v3/api-docs/**`; require HTTP Basic for all other endpoints
+- Replace `auditorProvider` placeholder: read principal name from `SecurityContextHolder`
+- `SecurityConfig` declares an in-memory user (`gymrat` / `gymrat`) for local dev
+
+**Verify:** `./gradlew :infrastructure:bootRun` — unauthenticated `GET /api/v1/exercises` returns `401`.
+
+---
+
+### Step 77 — Update controller and integration tests for authentication
+
+**Module:** `:infrastructure`
+
+- Update `@WebMvcTest` controller tests: add `@WithMockUser` or `Authorization: Basic` header
+- Update `ExerciseIntegrationTest`, `WorkoutIntegrationTest`, `SoftDeleteIntegrationTest`, `ValidationIntegrationTest`, `PaginationIntegrationTest`: set credentials on `TestRestTemplate`
+
+**Verify:** `./gradlew :infrastructure:test` — all tests green with security enabled.
+
+---
+
+### Step 78 — Dockerfile and docker-compose production profile
+
+**Files:**
+- `Dockerfile` (root) — multi-stage build: `gradle build` → `eclipse-temurin:21-jre` runtime image
+- `compose.yaml` — add `app` service referencing the image, linked to `postgres`; `POSTGRES_*` and `SPRING_DATASOURCE_*` via env vars
+
+**Verify:** `docker compose up --build` — app starts, `GET http://localhost:8080/actuator/health` returns `{"status":"UP"}`.
+
+---
+
+### Step 79 — Add GitHub Actions CI pipeline
+
+**File:** `.github/workflows/ci.yml`
+
+Stages:
+1. `build` — `./gradlew build` (compileJava + test all modules)
+2. `docker` (on `main`) — build Docker image, push to GitHub Container Registry
+
+**Verify:** push to `main` branch → GitHub Actions pipeline passes green.
+
+---
+
+### Step 80 — Performance baseline and README
+
+**Files:**
+- `README.md` — project overview, local setup instructions, environment variables reference, API quick-start examples
+- Add `spring.jpa.properties.hibernate.generate_statistics=false` production guard
+- Verify N+1 queries are absent: enable `spring.jpa.show-sql=true` locally, run `GET /api/v1/exercises` and `GET /api/v1/workouts/{id}`, confirm no unexpected extra queries
+
+**Verify:** `GET /api/v1/exercises` with 5 seed exercises produces exactly **1 SQL query**; `GET /api/v1/workouts/{id}` produces at most **3 queries** (workout + exerciseSeries + series). All tests still green.
 
 ---
 

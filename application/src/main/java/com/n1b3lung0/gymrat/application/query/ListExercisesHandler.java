@@ -26,7 +26,7 @@ public class ListExercisesHandler implements ListExercisesUseCase {
     public PageResult<ExerciseSummaryView> execute(ListExercisesQuery query) {
         Objects.requireNonNull(query, "query must not be null");
 
-        return exerciseQueryPort.findAll(query.pageRequest());
+        return exerciseQueryPort.findAllSummaries(query.pageRequest());
     }
 }
 

@@ -24,7 +24,7 @@ public class ListWorkoutsHandler implements ListWorkoutsUseCase {
     public PageResult<WorkoutSummaryView> execute(ListWorkoutsQuery query) {
         Objects.requireNonNull(query, "query must not be null");
 
-        return workoutQueryPort.findAll(query.pageRequest());
+        return workoutQueryPort.findAllSummaries(query.pageRequest());
     }
 }
 

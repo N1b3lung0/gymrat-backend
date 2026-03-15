@@ -30,6 +30,6 @@ public interface WorkoutQueryPort {
      * @param pageRequest pagination and sorting parameters
      * @return a {@link PageResult} of {@link WorkoutSummaryView}
      */
-    PageResult<WorkoutSummaryView> findAll(PageRequest pageRequest);
+    PageResult<WorkoutSummaryView> findAllSummaries(PageRequest pageRequest);
 }
 

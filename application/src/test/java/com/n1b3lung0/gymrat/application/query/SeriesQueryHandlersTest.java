@@ -95,7 +95,7 @@ class SeriesQueryHandlersTest {
             var summaries = List.of(
                     new SeriesSummaryView(UUID.randomUUID(), 1, 10, 7, BigDecimal.valueOf(80), RestTime.SIXTY),
                     new SeriesSummaryView(UUID.randomUUID(), 2, 8,  8, BigDecimal.valueOf(82.5), RestTime.NINETY));
-            when(seriesQueryPort.findAllByExerciseSeriesId(esId)).thenReturn(summaries);
+            when(seriesQueryPort.findAllSummariesByExerciseSeriesId(esId)).thenReturn(summaries);
 
             var result = listHandler.execute(new ListSeriesByExerciseSeriesQuery(esId));
 
@@ -108,7 +108,7 @@ class SeriesQueryHandlersTest {
         @DisplayName("should return empty list when no series exist")
         void shouldReturnEmptyList_whenNoResults() {
             var esId = ExerciseSeriesId.generate();
-            when(seriesQueryPort.findAllByExerciseSeriesId(esId)).thenReturn(List.of());
+            when(seriesQueryPort.findAllSummariesByExerciseSeriesId(esId)).thenReturn(List.of());
 
             var result = listHandler.execute(new ListSeriesByExerciseSeriesQuery(esId));
 

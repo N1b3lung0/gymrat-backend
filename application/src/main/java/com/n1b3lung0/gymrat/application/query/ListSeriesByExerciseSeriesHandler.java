@@ -24,7 +24,7 @@ public class ListSeriesByExerciseSeriesHandler implements ListSeriesByExerciseSe
     public List<SeriesSummaryView> execute(ListSeriesByExerciseSeriesQuery query) {
         Objects.requireNonNull(query, "query must not be null");
 
-        return seriesQueryPort.findAllByExerciseSeriesId(query.exerciseSeriesId());
+        return seriesQueryPort.findAllSummariesByExerciseSeriesId(query.exerciseSeriesId());
     }
 }
 

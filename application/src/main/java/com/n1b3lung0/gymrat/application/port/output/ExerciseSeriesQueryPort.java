@@ -27,6 +27,6 @@ public interface ExerciseSeriesQueryPort {
      * @param workoutId the parent workout identifier
      * @return list of summaries; never {@code null}
      */
-    List<ExerciseSeriesSummaryView> findAllByWorkoutId(WorkoutId workoutId);
+    List<ExerciseSeriesSummaryView> findAllSummariesByWorkoutId(WorkoutId workoutId);
 }
 

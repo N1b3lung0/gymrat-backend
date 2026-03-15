@@ -24,7 +24,7 @@ public class ListExerciseSeriesByWorkoutHandler implements ListExerciseSeriesByW
     public List<ExerciseSeriesSummaryView> execute(ListExerciseSeriesByWorkoutQuery query) {
         Objects.requireNonNull(query, "query must not be null");
 
-        return exerciseSeriesQueryPort.findAllByWorkoutId(query.workoutId());
+        return exerciseSeriesQueryPort.findAllSummariesByWorkoutId(query.workoutId());
     }
 }
 

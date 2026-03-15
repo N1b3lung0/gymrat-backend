@@ -91,7 +91,7 @@ class ExerciseSeriesQueryHandlersTest {
             var workoutId = WorkoutId.generate();
             var summaries = List.of(
                     new ExerciseSeriesSummaryView(UUID.randomUUID(), UUID.randomUUID(), 3));
-            when(exerciseSeriesQueryPort.findAllByWorkoutId(workoutId)).thenReturn(summaries);
+            when(exerciseSeriesQueryPort.findAllSummariesByWorkoutId(workoutId)).thenReturn(summaries);
 
             var result = listHandler.execute(new ListExerciseSeriesByWorkoutQuery(workoutId));
 
@@ -102,7 +102,7 @@ class ExerciseSeriesQueryHandlersTest {
         @DisplayName("should return empty list when no exercise-series exist")
         void shouldReturnEmptyList_whenNoResults() {
             var workoutId = WorkoutId.generate();
-            when(exerciseSeriesQueryPort.findAllByWorkoutId(workoutId)).thenReturn(List.of());
+            when(exerciseSeriesQueryPort.findAllSummariesByWorkoutId(workoutId)).thenReturn(List.of());
 
             var result = listHandler.execute(new ListExerciseSeriesByWorkoutQuery(workoutId));
 

@@ -50,6 +50,19 @@ public class ExerciseSeries {
     // -------------------------------------------------------------------------
 
     /**
+     * Reconstitutes an {@code ExerciseSeries} from persistence without emitting domain events.
+     * Intended for use by the infrastructure persistence mapper only.
+     */
+    public static ExerciseSeries reconstitute(
+            ExerciseSeriesId id,
+            WorkoutId workoutId,
+            ExerciseId exerciseId,
+            List<SeriesId> seriesIds,
+            AuditFields auditFields) {
+        return new ExerciseSeries(id, workoutId, exerciseId, seriesIds, auditFields);
+    }
+
+    /**
      * Creates a new {@code ExerciseSeries} linking an exercise to a workout.
      *
      * @param workoutId  the parent workout

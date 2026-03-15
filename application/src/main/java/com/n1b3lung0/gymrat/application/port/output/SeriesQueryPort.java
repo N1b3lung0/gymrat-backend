@@ -28,6 +28,6 @@ public interface SeriesQueryPort {
      * @param exerciseSeriesId the parent exercise-series identifier
      * @return ordered list of summaries; never {@code null}
      */
-    List<SeriesSummaryView> findAllByExerciseSeriesId(ExerciseSeriesId exerciseSeriesId);
+    List<SeriesSummaryView> findAllSummariesByExerciseSeriesId(ExerciseSeriesId exerciseSeriesId);
 }
 

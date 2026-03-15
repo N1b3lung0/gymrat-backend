@@ -91,7 +91,7 @@ class WorkoutQueryHandlersTest {
             var pageRequest = PageRequest.of(0, 10);
             var summary     = new WorkoutSummaryView(WorkoutId.generate().value(), Instant.now(), null, false);
             var expected    = new PageResult<>(List.of(summary), 0, 10, 1L);
-            when(workoutQueryPort.findAll(pageRequest)).thenReturn(expected);
+            when(workoutQueryPort.findAllSummaries(pageRequest)).thenReturn(expected);
 
             var result = listHandler.execute(new ListWorkoutsQuery(pageRequest));
 
@@ -103,7 +103,7 @@ class WorkoutQueryHandlersTest {
         @DisplayName("should return empty page when no workouts exist")
         void shouldReturnEmptyPage_whenNoResults() {
             var pageRequest = PageRequest.of(0, 10);
-            when(workoutQueryPort.findAll(pageRequest))
+            when(workoutQueryPort.findAllSummaries(pageRequest))
                     .thenReturn(new PageResult<>(List.of(), 0, 10, 0L));
 
             var result = listHandler.execute(new ListWorkoutsQuery(pageRequest));

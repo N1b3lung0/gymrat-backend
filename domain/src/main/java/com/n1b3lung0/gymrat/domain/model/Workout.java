@@ -50,6 +50,19 @@ public class Workout {
     // -------------------------------------------------------------------------
 
     /**
+     * Reconstitutes a {@code Workout} from persistence without emitting domain events.
+     * Intended for use by the infrastructure persistence mapper only.
+     */
+    public static Workout reconstitute(
+            WorkoutId id,
+            Instant startWorkout,
+            Instant endWorkout,
+            List<ExerciseSeriesId> exerciseSeriesIds,
+            AuditFields auditFields) {
+        return new Workout(id, startWorkout, endWorkout, exerciseSeriesIds, auditFields);
+    }
+
+    /**
      * Starts a new {@code Workout}.
      *
      * @param startWorkout timestamp when the session begins; must not be null

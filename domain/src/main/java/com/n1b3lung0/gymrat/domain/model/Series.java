@@ -69,6 +69,26 @@ public class Series {
     // -------------------------------------------------------------------------
 
     /**
+     * Reconstitutes a {@code Series} from persistence without emitting domain events.
+     * Intended for use by the infrastructure persistence mapper only.
+     */
+    public static Series reconstitute(
+            SeriesId id,
+            int serialNumber,
+            int repetitionsToDo,
+            Integer repetitionsDone,
+            int intensity,
+            BigDecimal weight,
+            Instant startSeries,
+            Instant endSeries,
+            RestTime restTime,
+            ExerciseSeriesId exerciseSeriesId,
+            AuditFields auditFields) {
+        return new Series(id, serialNumber, repetitionsToDo, repetitionsDone, intensity,
+                weight, startSeries, endSeries, restTime, exerciseSeriesId, auditFields);
+    }
+
+    /**
      * Creates a new {@code Series}.
      *
      * @param serialNumber     1-based order within the parent {@link ExerciseSeries}

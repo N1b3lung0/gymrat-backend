@@ -2,13 +2,9 @@ spring:
   docker:
     compose:
       enabled: false
-  datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:tc:postgresql:17:///gymrat}
-    username: ${SPRING_DATASOURCE_USERNAME:gymrat}
-    password: ${SPRING_DATASOURCE_PASSWORD:gymrat}
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -18,7 +14,6 @@ spring:
     locations: classpath:db/migration
     validate-on-migrate: true
 
-
 logging:
   level:
-    org.flywaydb: DEBUG
+    org.flywaydb: INFO

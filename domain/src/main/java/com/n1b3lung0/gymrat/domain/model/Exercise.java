@@ -74,6 +74,26 @@ public class Exercise {
     // -------------------------------------------------------------------------
 
     /**
+     * Reconstitutes an {@code Exercise} from persistence without emitting domain events.
+     * Intended for use by the infrastructure persistence mapper only.
+     */
+    public static Exercise reconstitute(
+            ExerciseId id,
+            String name,
+            String description,
+            Level level,
+            Set<Routine> routines,
+            Muscle primaryMuscle,
+            Set<Muscle> secondaryMuscles,
+            Media image,
+            Media video,
+            List<ExerciseSeriesId> exerciseSeriesIds,
+            AuditFields auditFields) {
+        return new Exercise(id, name, description, level, routines, primaryMuscle,
+                secondaryMuscles, image, video, exerciseSeriesIds, auditFields);
+    }
+
+    /**
      * Creates a new {@code Exercise} and emits an {@link ExerciseCreated} event.
      *
      * <p>Prefer {@link Builder} to supply the arguments fluently.

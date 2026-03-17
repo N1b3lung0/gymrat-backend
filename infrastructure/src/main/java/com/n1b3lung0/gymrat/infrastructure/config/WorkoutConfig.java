@@ -9,6 +9,7 @@ import com.n1b3lung0.gymrat.application.port.input.command.FinishWorkoutUseCase;
 import com.n1b3lung0.gymrat.application.port.input.query.GetWorkoutByIdUseCase;
 import com.n1b3lung0.gymrat.application.port.input.query.ListWorkoutsUseCase;
 import com.n1b3lung0.gymrat.application.port.output.DomainEventPublisherPort;
+import com.n1b3lung0.gymrat.application.port.output.MetricsPort;
 import com.n1b3lung0.gymrat.application.port.output.WorkoutQueryPort;
 import com.n1b3lung0.gymrat.application.query.GetWorkoutByIdHandler;
 import com.n1b3lung0.gymrat.application.query.ListWorkoutsHandler;
@@ -27,8 +28,9 @@ public class WorkoutConfig {
     @Bean
     public CreateWorkoutUseCase createWorkoutUseCase(
             WorkoutRepositoryPort workoutRepository,
-            DomainEventPublisherPort eventPublisher) {
-        return new CreateWorkoutHandler(workoutRepository, eventPublisher);
+            DomainEventPublisherPort eventPublisher,
+            MetricsPort metrics) {
+        return new CreateWorkoutHandler(workoutRepository, eventPublisher, metrics);
     }
 
     @Bean

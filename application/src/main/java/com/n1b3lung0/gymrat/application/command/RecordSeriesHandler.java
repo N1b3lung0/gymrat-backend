@@ -3,6 +3,7 @@ package com.n1b3lung0.gymrat.application.command;
 import com.n1b3lung0.gymrat.application.dto.RecordSeriesCommand;
 import com.n1b3lung0.gymrat.application.port.input.command.RecordSeriesUseCase;
 import com.n1b3lung0.gymrat.application.port.output.DomainEventPublisherPort;
+import com.n1b3lung0.gymrat.application.port.output.MetricsPort;
 import com.n1b3lung0.gymrat.domain.exception.ExerciseSeriesNotFoundException;
 import com.n1b3lung0.gymrat.domain.model.Series;
 import com.n1b3lung0.gymrat.domain.model.SeriesId;
@@ -25,17 +26,22 @@ import java.util.Objects;
  */
 public class RecordSeriesHandler implements RecordSeriesUseCase {
 
+    static final String SERIES_RECORDED_METRIC = "series.recorded.total";
+
     private final SeriesRepositoryPort          seriesRepository;
     private final ExerciseSeriesRepositoryPort  exerciseSeriesRepository;
     private final DomainEventPublisherPort      eventPublisher;
+    private final MetricsPort                   metrics;
 
     public RecordSeriesHandler(
             SeriesRepositoryPort seriesRepository,
             ExerciseSeriesRepositoryPort exerciseSeriesRepository,
-            DomainEventPublisherPort eventPublisher) {
+            DomainEventPublisherPort eventPublisher,
+            MetricsPort metrics) {
         this.seriesRepository         = Objects.requireNonNull(seriesRepository);
         this.exerciseSeriesRepository = Objects.requireNonNull(exerciseSeriesRepository);
         this.eventPublisher           = Objects.requireNonNull(eventPublisher);
+        this.metrics                  = Objects.requireNonNull(metrics);
     }
 
     @Override
@@ -70,6 +76,9 @@ public class RecordSeriesHandler implements RecordSeriesUseCase {
         // 6. Publish domain events
         series.pullDomainEvents().forEach(eventPublisher::publish);
         exerciseSeries.pullDomainEvents().forEach(eventPublisher::publish);
+
+        // 7. Metrics
+        metrics.increment(SERIES_RECORDED_METRIC);
 
         return series.getId();
     }

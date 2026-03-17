@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!--
+        Structured logging configuration for gymrat-backend.
+
+        Profile-aware:
+          - prod  → JSON (logstash-logback-encoder) for log aggregation (ELK, Loki, etc.)
+          - local → coloured plain text for developer readability
+          - default (no active profile) → same as local
+    -->
+
+    <!-- ===================================================================
+         PROD profile — JSON structured output to stdout
+         =================================================================== -->
+    <springProfile name="prod">
+        <appender name="JSON_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+                <!-- Include MDC fields (traceId, spanId, etc.) automatically -->
+                <includeMdcKeyName>traceId</includeMdcKeyName>
+                <includeMdcKeyName>spanId</includeMdcKeyName>
+                <customFields>{"app":"gymrat-backend","env":"prod"}</customFields>
+                <fieldNames>
+                    <timestamp>timestamp</timestamp>
+                    <message>message</message>
+                    <logger>logger</logger>
+                    <thread>thread</thread>
+                    <level>level</level>
+                    <levelValue>[ignore]</levelValue>
+                </fieldNames>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="JSON_STDOUT"/>
+        </root>
+
+        <logger name="com.n1b3lung0.gymrat" level="INFO"/>
+        <logger name="org.flywaydb"         level="INFO"/>
+        <logger name="org.hibernate.SQL"    level="WARN"/>
+    </springProfile>
+
+    <!-- ===================================================================
+         local / default profile — coloured plain text output to stdout
+         =================================================================== -->
+    <springProfile name="local | default">
+        <appender name="PLAIN_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="PLAIN_STDOUT"/>
+        </root>
+
+        <logger name="com.n1b3lung0.gymrat" level="DEBUG"/>
+        <logger name="org.flywaydb"         level="INFO"/>
+        <logger name="org.hibernate.SQL"    level="DEBUG"/>
+        <logger name="org.hibernate.orm.jdbc.bind" level="TRACE"/>
+    </springProfile>
+
+</configuration>
+
+

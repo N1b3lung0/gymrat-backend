@@ -15,11 +15,12 @@ spring:
       hibernate:
         format_sql: false
   flyway:
-    enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: false
     validate-on-migrate: true
     out-of-order: false
+    default-schema: public
+    schemas: public
 
 management:
   endpoints:

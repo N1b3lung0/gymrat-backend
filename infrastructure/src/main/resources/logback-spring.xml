@@ -5,10 +5,16 @@
         Structured logging configuration for gymrat-backend.
 
         Profile-aware:
-          - prod  → JSON (logstash-logback-encoder) for log aggregation (ELK, Loki, etc.)
-          - local → coloured plain text for developer readability
+          - prod    → JSON (logstash-logback-encoder) for log aggregation (ELK, Loki, etc.)
+          - local   → coloured plain text for developer readability
           - default (no active profile) → same as local
     -->
+
+    <!-- Register Spring Boot color converters needed for %clr -->
+    <conversionRule conversionWord="clr"
+                    class="org.springframework.boot.logging.logback.ColorConverter"/>
+    <conversionRule conversionWord="wEx"
+                    class="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"/>
 
     <!-- ===================================================================
          PROD profile — JSON structured output to stdout
@@ -46,7 +52,7 @@
     <springProfile name="local | default">
         <appender name="PLAIN_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>
-                <pattern>%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%wEx</pattern>
+                <pattern>%clr(%d{HH:mm:ss.SSS}){faint} %clr(%5p) %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n%xEx</pattern>
                 <charset>UTF-8</charset>
             </encoder>
         </appender>
@@ -62,5 +68,4 @@
     </springProfile>
 
 </configuration>
-
 

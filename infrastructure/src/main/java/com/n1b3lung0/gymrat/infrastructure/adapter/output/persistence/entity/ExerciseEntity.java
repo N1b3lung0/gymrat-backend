@@ -70,7 +70,7 @@ public class ExerciseEntity {
     @Column(name = "primary_muscle", nullable = false, length = 50)
     private Muscle primaryMuscle;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "exercise_routines",
             joinColumns = @JoinColumn(name = "exercise_id",
@@ -81,7 +81,7 @@ public class ExerciseEntity {
     @Builder.Default
     private Set<Routine> routines = new HashSet<>();
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(
             name = "exercise_secondary_muscles",
             joinColumns = @JoinColumn(name = "exercise_id",

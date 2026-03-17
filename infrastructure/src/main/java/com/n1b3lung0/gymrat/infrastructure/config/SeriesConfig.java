@@ -9,6 +9,7 @@ import com.n1b3lung0.gymrat.application.port.input.command.UpdateSeriesUseCase;
 import com.n1b3lung0.gymrat.application.port.input.query.GetSeriesByIdUseCase;
 import com.n1b3lung0.gymrat.application.port.input.query.ListSeriesByExerciseSeriesUseCase;
 import com.n1b3lung0.gymrat.application.port.output.DomainEventPublisherPort;
+import com.n1b3lung0.gymrat.application.port.output.MetricsPort;
 import com.n1b3lung0.gymrat.application.port.output.SeriesQueryPort;
 import com.n1b3lung0.gymrat.application.query.GetSeriesByIdHandler;
 import com.n1b3lung0.gymrat.application.query.ListSeriesByExerciseSeriesHandler;
@@ -29,8 +30,9 @@ public class SeriesConfig {
     public RecordSeriesUseCase recordSeriesUseCase(
             SeriesRepositoryPort seriesRepository,
             ExerciseSeriesRepositoryPort exerciseSeriesRepository,
-            DomainEventPublisherPort eventPublisher) {
-        return new RecordSeriesHandler(seriesRepository, exerciseSeriesRepository, eventPublisher);
+            DomainEventPublisherPort eventPublisher,
+            MetricsPort metrics) {
+        return new RecordSeriesHandler(seriesRepository, exerciseSeriesRepository, eventPublisher, metrics);
     }
 
     @Bean

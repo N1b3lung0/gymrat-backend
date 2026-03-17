@@ -4,6 +4,7 @@ import com.n1b3lung0.gymrat.application.dto.CreateWorkoutCommand;
 import com.n1b3lung0.gymrat.application.dto.DeleteWorkoutCommand;
 import com.n1b3lung0.gymrat.application.dto.FinishWorkoutCommand;
 import com.n1b3lung0.gymrat.application.port.output.DomainEventPublisherPort;
+import com.n1b3lung0.gymrat.application.port.output.MetricsPort;
 import com.n1b3lung0.gymrat.domain.event.WorkoutFinished;
 import com.n1b3lung0.gymrat.domain.event.WorkoutStarted;
 import com.n1b3lung0.gymrat.domain.exception.WorkoutAlreadyFinishedException;
@@ -30,8 +31,9 @@ import static org.mockito.Mockito.*;
 @DisplayName("Workout Command Handlers")
 class WorkoutCommandHandlersTest {
 
-    @Mock WorkoutRepositoryPort workoutRepository;
+    @Mock WorkoutRepositoryPort    workoutRepository;
     @Mock DomainEventPublisherPort eventPublisher;
+    @Mock MetricsPort              metrics;
 
     CreateWorkoutHandler createHandler;
     FinishWorkoutHandler finishHandler;
@@ -39,7 +41,7 @@ class WorkoutCommandHandlersTest {
 
     @BeforeEach
     void setUp() {
-        createHandler = new CreateWorkoutHandler(workoutRepository, eventPublisher);
+        createHandler = new CreateWorkoutHandler(workoutRepository, eventPublisher, metrics);
         finishHandler = new FinishWorkoutHandler(workoutRepository, eventPublisher);
         deleteHandler = new DeleteWorkoutHandler(workoutRepository, eventPublisher);
     }

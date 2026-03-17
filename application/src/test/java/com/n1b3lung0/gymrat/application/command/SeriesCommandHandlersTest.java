@@ -4,6 +4,7 @@ import com.n1b3lung0.gymrat.application.dto.DeleteSeriesCommand;
 import com.n1b3lung0.gymrat.application.dto.RecordSeriesCommand;
 import com.n1b3lung0.gymrat.application.dto.UpdateSeriesCommand;
 import com.n1b3lung0.gymrat.application.port.output.DomainEventPublisherPort;
+import com.n1b3lung0.gymrat.application.port.output.MetricsPort;
 import com.n1b3lung0.gymrat.domain.event.SeriesCreated;
 import com.n1b3lung0.gymrat.domain.exception.ExerciseSeriesNotFoundException;
 import com.n1b3lung0.gymrat.domain.exception.SeriesNotFoundException;
@@ -40,6 +41,7 @@ class SeriesCommandHandlersTest {
     @Mock SeriesRepositoryPort         seriesRepository;
     @Mock ExerciseSeriesRepositoryPort exerciseSeriesRepository;
     @Mock DomainEventPublisherPort     eventPublisher;
+    @Mock MetricsPort                  metrics;
 
     RecordSeriesHandler recordHandler;
     UpdateSeriesHandler updateHandler;
@@ -47,7 +49,7 @@ class SeriesCommandHandlersTest {
 
     @BeforeEach
     void setUp() {
-        recordHandler = new RecordSeriesHandler(seriesRepository, exerciseSeriesRepository, eventPublisher);
+        recordHandler = new RecordSeriesHandler(seriesRepository, exerciseSeriesRepository, eventPublisher, metrics);
         updateHandler = new UpdateSeriesHandler(seriesRepository, eventPublisher);
         deleteHandler = new DeleteSeriesHandler(seriesRepository);
     }

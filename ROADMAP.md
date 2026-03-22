@@ -1064,17 +1064,19 @@ Tests:
 
 ---
 
-### Step 67 — Controller slice tests: `ExerciseControllerTest`
+### Step 67 — Controller slice tests: `ExerciseControllerTest` ✅
 
 **Module:** `:infrastructure`  
-**Annotation:** `@WebMvcTest(ExerciseController.class)`
+**Note:** `@WebMvcTest` was removed in Spring Boot 4.x. Use `MockMvcBuilders.standaloneSetup()` with
+`@ExtendWith(MockitoExtension.class)` + `GlobalExceptionHandler` registered via `.setControllerAdvice()`.
+Use `JacksonJsonHttpMessageConverter` (Spring Framework 7 replacement for the deprecated `MappingJackson2HttpMessageConverter`).
 
-Tests (mock use case beans):
-- `shouldReturn201_whenCreateExercise()`
-- `shouldReturn400_whenNameIsBlank()`
-- `shouldReturn404_whenExerciseNotFound()`
-- `shouldReturn200WithPage_whenListExercises()`
-- `shouldReturn204_whenDeleteExercise()`
+Tests implemented (`@Mock` use case beans, `@Nested` per HTTP verb):
+- **POST** `shouldReturn201_whenCreateExercise()`, `shouldReturn422_whenNameIsBlank()`, `shouldReturn422_whenLevelIsMissing()`, `shouldReturn422_whenRoutinesIsEmpty()`, `shouldReturn409_whenNameAlreadyExists()`
+- **GET /{id}** `shouldReturn200_whenExerciseFound()`, `shouldReturn404_whenExerciseNotFound()`, `shouldReturn400_whenIdIsInvalidUuid()`
+- **GET** `shouldReturn200WithPage_whenListExercises()`, `shouldReturn200WithEmptyPage_whenNoExercises()`
+- **PUT** `shouldReturn200_whenExerciseUpdated()`, `shouldReturn404_whenExerciseNotFound()`, `shouldReturn409_whenNameAlreadyExists()`
+- **DELETE** `shouldReturn204_whenDeleteExercise()`, `shouldReturn404_whenExerciseNotFound()`, `shouldReturn400_whenIdIsInvalidUuid()`
 
 **Verify:** `./gradlew :infrastructure:test --tests "*ExerciseControllerTest"` — green.
 

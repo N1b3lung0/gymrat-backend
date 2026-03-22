@@ -1082,9 +1082,23 @@ Tests implemented (`@Mock` use case beans, `@Nested` per HTTP verb):
 
 ---
 
-### Step 68 — Controller slice tests: `WorkoutControllerTest`, `SeriesControllerTest`
+### Step 68 — Controller slice tests: `WorkoutControllerTest`, `SeriesControllerTest` ✅
 
-Same pattern as step 67 for `WorkoutController` and `SeriesController`.
+Same pattern as step 67 (`MockMvcBuilders.standaloneSetup()` + `@ExtendWith(MockitoExtension.class)` + `GlobalExceptionHandler`).
+
+**`WorkoutControllerTest`** — 12 tests across 5 `@Nested` groups:
+- **POST** `shouldReturn201_whenCreateWorkout()`, `shouldReturn422_whenStartWorkoutIsMissing()`
+- **GET /{id}** `shouldReturn200_whenWorkoutFound()`, `shouldReturn404_whenWorkoutNotFound()`, `shouldReturn400_whenIdIsInvalidUuid()`
+- **GET** `shouldReturn200WithPage_whenListWorkouts()`, `shouldReturn200WithEmptyPage_whenNoWorkouts()`
+- **PATCH /{id}/finish** `shouldReturn200_whenWorkoutFinished()`, `shouldReturn404_whenWorkoutNotFound()`, `shouldReturn422_whenAlreadyFinished()`
+- **DELETE** `shouldReturn204_whenDeleteWorkout()`, `shouldReturn404_whenWorkoutNotFound()`, `shouldReturn400_whenIdIsInvalidUuid()`
+
+**`SeriesControllerTest`** — 14 tests across 5 `@Nested` groups:
+- **POST** `shouldReturn201_whenSeriesRecorded()`, `shouldReturn422_whenRepetitionsToDoIsZero()`, `shouldReturn422_whenRestTimeIsMissing()`, `shouldReturn404_whenExerciseSeriesNotFound()`
+- **GET** `shouldReturn200_whenSeriesExist()`, `shouldReturn200_whenNoSeriesExist()`
+- **GET /{seriesId}** `shouldReturn200_whenSeriesFound()`, `shouldReturn404_whenSeriesNotFound()`, `shouldReturn400_whenSeriesIdIsInvalidUuid()`
+- **PUT /{seriesId}** `shouldReturn200_whenSeriesUpdated()`, `shouldReturn404_whenSeriesNotFound()`
+- **DELETE /{seriesId}** `shouldReturn204_whenSeriesDeleted()`, `shouldReturn404_whenSeriesNotFound()`, `shouldReturn400_whenSeriesIdIsInvalidUuid()`
 
 **Verify:** `./gradlew :infrastructure:test` — all controller tests green.
 

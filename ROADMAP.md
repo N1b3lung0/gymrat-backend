@@ -1104,14 +1104,31 @@ Same pattern as step 67 (`MockMvcBuilders.standaloneSetup()` + `@ExtendWith(Mock
 
 ---
 
-### Step 69 — JPA Adapter integration tests with Testcontainers
+### Step 69 — JPA Adapter integration tests with Testcontainers ✅
 
 **Module:** `:infrastructure`  
-**Annotation:** `@DataJpaTest` + Testcontainers PostgreSQL
+**Approach:** `@SpringBootTest` + `@Testcontainers` + `@Transactional` (rollback per test).  
+Note: `@DataJpaTest` was not used because it bypasses Flyway migrations and the multi-module setup;
+`@SpringBootTest` against a real Testcontainers PostgreSQL is the correct approach.
 
-**Files:**
-- `ExerciseJpaAdapterTest.java` — save, findById, findAll paged, soft delete
-- `SeriesJpaAdapterTest.java` — save, auto serialNumber, findAllByExerciseSeriesId
+**Important:** Exercise `name` is `UNIQUE` in the DB and `data.sql` seeds sample data.
+Helper methods append `System.nanoTime()` to exercise names to avoid constraint collisions.
+
+**`ExerciseJpaAdapterTest`** — 16 tests across 6 `@Nested` groups:
+- **save()** — persists with same id, routines element-collection, secondaryMuscles, active audit fields
+- **findById()** — found, not found
+- **findAll()** — paged list, respects page size, empty page
+- **existsByName()** — true when exists, false when not
+- **deleteById() soft-delete** — not returned by findById, excluded from paged result
+- **findDetailById()** — detail view with all fields
+
+**`SeriesJpaAdapterTest`** — 13 tests across 6 `@Nested` groups:
+- **save()** — persists with same id, intensity+weight, active audit fields
+- **findById()** — found, not found
+- **serialNumber ordering** — count=0 before any, increments per save, ordered asc
+- **findAllByExerciseSeriesId()** — empty list, all series returned
+- **deleteById() soft-delete** — not returned by findById, count decremented
+- **findDetailById()** — detail view with all fields
 
 **Verify:** `./gradlew :infrastructure:test --tests "*JpaAdapterTest"` — green.
 

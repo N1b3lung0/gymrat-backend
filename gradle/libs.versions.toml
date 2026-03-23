@@ -10,7 +10,6 @@ archunit                  = "1.4.0"
 testcontainers            = "1.20.6"
 springdoc                 = "2.8.5"
 logstash-encoder          = "8.1"
-micrometer-tracing        = "1.4.5"
 spotless                  = "7.0.3"
 checkstyle                = "10.21.4"
 
@@ -39,8 +38,8 @@ mapstruct-processor       = { module = "org.mapstruct:mapstruct-processor",     
 springdoc-openapi         = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc" }
 
 # — Observability
-micrometer-otlp           = { module = "io.micrometer:micrometer-registry-otlp",           version.ref = "micrometer-tracing" }
-micrometer-tracing-otel   = { module = "io.micrometer:micrometer-tracing-bridge-otel",      version.ref = "micrometer-tracing" }
+micrometer-otlp           = { module = "io.micrometer:micrometer-registry-otlp" }
+micrometer-tracing-otel   = { module = "io.micrometer:micrometer-tracing-bridge-otel" }
 logstash-encoder          = { module = "net.logstash.logback:logstash-logback-encoder",     version.ref = "logstash-encoder" }
 
 # — Testing

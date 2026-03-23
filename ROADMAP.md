@@ -50,13 +50,14 @@ Series
 | 5 | 48–58 | Infrastructure layer: REST controllers, DTOs, mappers, config beans |
 | 6 | 59–62 | Cross-cutting: exception handler, OpenAPI, observability, data seeds |
 | 7 | 63–70 | Testing: unit tests, slice tests, architecture tests |
-| 8 | 71–80 | End-to-end: full integration tests, security, performance, deployment |
+| 7.5 | 71–82 | Structural alignment with CLAUDE.md conventions |
+| 8 | 83–92 | End-to-end: full integration tests, security, performance, deployment |
 
 ---
 
 ## Phase 0 — Multi-Module Gradle Restructure
 
-### Step 1 — Migrate build files from Groovy DSL to Kotlin DSL
+### Step 1 — Migrate build files from Groovy DSL to Kotlin DSL ✅
 
 **Goal:** rename `build.gradle` → `build.gradle.kts` and `settings.gradle` → `settings.gradle.kts`, migrate syntax.  
 **Files:**
@@ -67,7 +68,7 @@ Series
 
 ---
 
-### Step 2 — Create `gradle/libs.versions.toml` (Version Catalog)
+### Step 2 — Create `gradle/libs.versions.toml` (Version Catalog) ✅
 
 **Goal:** declare all dependency versions and library aliases centrally.  
 **Files:**
@@ -77,7 +78,7 @@ Series
 
 ---
 
-### Step 3 — Create `:domain` module
+### Step 3 — Create `:domain` module ✅
 
 **Goal:** bare module with `build.gradle.kts` (no Spring dependencies, pure Java).  
 **Files:**
@@ -89,7 +90,7 @@ Series
 
 ---
 
-### Step 4 — Create `:application` module
+### Step 4 — Create `:application` module ✅
 
 **Goal:** bare module depending only on `:domain`.  
 **Files:**
@@ -101,7 +102,7 @@ Series
 
 ---
 
-### Step 5 — Create `:infrastructure` module and move existing Spring Boot wiring
+### Step 5 — Create `:infrastructure` module and move existing Spring Boot wiring ✅
 
 **Goal:** `:infrastructure` depends on `:application` + `:domain`. Move `GymratApplication.java`, `application.yaml`, `compose.yaml` into the infra module. Root `build.gradle.kts` becomes a conventions-only file.  
 **Files:**
@@ -116,7 +117,7 @@ Series
 
 ## Phase 1 — Domain Layer: Enums and Value Objects
 
-### Step 6 — Create `Routine` enum
+### Step 6 — Create `Routine` enum ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`  
@@ -127,7 +128,7 @@ Series
 
 ---
 
-### Step 7 — Create `Muscle` enum
+### Step 7 — Create `Muscle` enum ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`  
@@ -138,7 +139,7 @@ Series
 
 ---
 
-### Step 8 — Create `Level` enum
+### Step 8 — Create `Level` enum ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`  
@@ -149,7 +150,7 @@ Series
 
 ---
 
-### Step 9 — Create `RestTime` enum
+### Step 9 — Create `RestTime` enum ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`  
@@ -160,7 +161,7 @@ Series
 
 ---
 
-### Step 10 — Create Value Object `ExerciseId`
+### Step 10 — Create Value Object `ExerciseId` ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`  
@@ -170,7 +171,7 @@ Series
 
 ---
 
-### Step 11 — Create Value Objects `SeriesId`, `ExerciseSeriesId`, `WorkoutId`
+### Step 11 — Create Value Objects `SeriesId`, `ExerciseSeriesId`, `WorkoutId` ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`  
@@ -180,7 +181,7 @@ Series
 
 ---
 
-### Step 12 — Create `Media` value object (replaces image/video embedded class)
+### Step 12 — Create `Media` value object (replaces image/video embedded class) ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`  
@@ -192,7 +193,7 @@ Series
 
 ---
 
-### Step 13 — Create `AuditFields` value object
+### Step 13 — Create `AuditFields` value object ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`  
@@ -218,7 +219,7 @@ public record AuditFields(
 
 ## Phase 1 (cont.) — Domain Aggregates
 
-### Step 14 — Create `Exercise` aggregate root
+### Step 14 — Create `Exercise` aggregate root ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`  
@@ -245,7 +246,7 @@ Package-private reconstitution constructor.
 
 ---
 
-### Step 15 — Create `Series`, `ExerciseSeries` and `Workout` aggregates
+### Step 15 — Create `Series`, `ExerciseSeries` and `Workout` aggregates ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.model`
@@ -267,7 +268,7 @@ Business method: `workout.finish(endWorkout)`, `workout.addExerciseSeries(exerci
 
 ## Phase 2 — Domain Layer: Exceptions, Ports, Events
 
-### Step 16 — Create domain exception hierarchy
+### Step 16 — Create domain exception hierarchy ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.exception`  
@@ -281,7 +282,7 @@ Business method: `workout.finish(endWorkout)`, `workout.addExerciseSeries(exerci
 
 ---
 
-### Step 17 — Create concrete domain exceptions for Exercise
+### Step 17 — Create concrete domain exceptions for Exercise ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.exception`  
@@ -294,7 +295,7 @@ Business method: `workout.finish(endWorkout)`, `workout.addExerciseSeries(exerci
 
 ---
 
-### Step 18 — Create concrete domain exceptions for Series, ExerciseSeries, Workout
+### Step 18 — Create concrete domain exceptions for Series, ExerciseSeries, Workout ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.exception`  
@@ -308,7 +309,7 @@ Business method: `workout.finish(endWorkout)`, `workout.addExerciseSeries(exerci
 
 ---
 
-### Step 19 — Create `ExerciseRepositoryPort` and `MediaRepositoryPort`
+### Step 19 — Create `ExerciseRepositoryPort` and `MediaRepositoryPort` ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.repository`  
@@ -320,7 +321,7 @@ Business method: `workout.finish(endWorkout)`, `workout.addExerciseSeries(exerci
 
 ---
 
-### Step 20 — Create `SeriesRepositoryPort`, `ExerciseSeriesRepositoryPort`, `WorkoutRepositoryPort`
+### Step 20 — Create `SeriesRepositoryPort`, `ExerciseSeriesRepositoryPort`, `WorkoutRepositoryPort` ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.repository`  
@@ -333,7 +334,7 @@ Business method: `workout.finish(endWorkout)`, `workout.addExerciseSeries(exerci
 
 ---
 
-### Step 21 — Create domain events (sealed interfaces + records)
+### Step 21 — Create domain events (sealed interfaces + records) ✅
 
 **Module:** `:domain`  
 **Package:** `com.n1b3lung0.gymrat.domain.event`  
@@ -357,7 +358,7 @@ SeriesEvent.java         sealed interface
 
 ---
 
-### Step 22 — Add domain event accumulation to aggregates
+### Step 22 — Add domain event accumulation to aggregates ✅
 
 **Module:** `:domain`  
 **Goal:** add `List<? extends Object> domainEvents` + `pullDomainEvents()` to `Exercise`, `Workout` and `Series` following the pattern in CLAUDE.md. Emit events from factory methods and business methods.
@@ -368,7 +369,7 @@ SeriesEvent.java         sealed interface
 
 ## Phase 3 — Application Layer: CQRS Use Cases
 
-### Step 23 — Create application module structure and `DomainEventPublisherPort`
+### Step 23 — Create application module structure and `DomainEventPublisherPort` ✅
 
 **Module:** `:application`  
 **Package:** `com.n1b3lung0.gymrat.application.port.output`  
@@ -384,7 +385,7 @@ public interface DomainEventPublisherPort {
 
 ---
 
-### Step 24 — Create Exercise Query Port and View DTOs
+### Step 24 — Create Exercise Query Port and View DTOs ✅
 
 **Module:** `:application`  
 **Package:** `com.n1b3lung0.gymrat.application.port.output`  
@@ -398,7 +399,7 @@ public interface DomainEventPublisherPort {
 
 ---
 
-### Step 25 — Create Exercise Use Case input ports
+### Step 25 — Create Exercise Use Case input ports ✅
 
 **Module:** `:application`  
 **Package:** `com.n1b3lung0.gymrat.application.port.input`  
@@ -413,7 +414,7 @@ public interface DomainEventPublisherPort {
 
 ---
 
-### Step 26 — Create Exercise Commands and Queries (records)
+### Step 26 — Create Exercise Commands and Queries (records) ✅
 
 **Module:** `:application`  
 **Package:** `com.n1b3lung0.gymrat.application.dto`  
@@ -428,7 +429,7 @@ public interface DomainEventPublisherPort {
 
 ---
 
-### Step 27 — Create `CreateExerciseHandler`
+### Step 27 — Create `CreateExerciseHandler` ✅
 
 **Module:** `:application`  
 **Package:** `com.n1b3lung0.gymrat.application.command`  
@@ -450,7 +451,7 @@ Logic:
 
 ---
 
-### Step 28 — Create `UpdateExerciseHandler` and `DeleteExerciseHandler`
+### Step 28 — Create `UpdateExerciseHandler` and `DeleteExerciseHandler` ✅
 
 **Module:** `:application`  
 **Package:** `com.n1b3lung0.gymrat.application.command`
@@ -464,7 +465,7 @@ Logic:
 
 ---
 
-### Step 29 — Create `GetExerciseByIdHandler` and `ListExercisesHandler`
+### Step 29 — Create `GetExerciseByIdHandler` and `ListExercisesHandler` ✅
 
 **Module:** `:application`  
 **Package:** `com.n1b3lung0.gymrat.application.query`
@@ -478,7 +479,7 @@ Logic:
 
 ---
 
-### Step 30 — Create Workout + ExerciseSeries + Series Use Case ports, Commands, Queries and Handlers
+### Step 30 — Create Workout + ExerciseSeries + Series Use Case ports, Commands, Queries and Handlers ✅
 
 **Module:** `:application`  
 **Packages:** `port.input.command`, `port.input.query`, `dto`, `command`, `query`
@@ -495,7 +496,7 @@ Logic:
 
 ---
 
-### Step 31 — Create ExerciseSeries Use Case ports, Commands, Queries and Handlers
+### Step 31 — Create ExerciseSeries Use Case ports, Commands, Queries and Handlers ✅
 
 **Module:** `:application`
 
@@ -508,7 +509,7 @@ Logic:
 
 ---
 
-### Step 32 — Create Series Use Case ports, Commands, Queries and Handlers
+### Step 32 — Create Series Use Case ports, Commands, Queries and Handlers ✅
 
 **Module:** `:application`
 
@@ -523,7 +524,7 @@ Logic:
 
 ## Phase 4 — Infrastructure Layer: Persistence
 
-### Step 33 — Configure Flyway and PostgreSQL in `:infrastructure`
+### Step 33 — Configure Flyway and PostgreSQL in `:infrastructure` ✅
 
 **Module:** `:infrastructure`  
 **Files:**
@@ -534,7 +535,7 @@ Logic:
 
 ---
 
-### Step 34 — Create `media` table migration (V1)
+### Step 34 — Create `media` table migration (V1) ✅
 
 **File:** `V1__create_media_table.sql`
 
@@ -559,7 +560,7 @@ CREATE INDEX ON media (url) WHERE deleted_at IS NULL;
 
 ---
 
-### Step 35 — Create `exercises` table migration (V2)
+### Step 35 — Create `exercises` table migration (V2) ✅
 
 **File:** `V2__create_exercises_table.sql`
 
@@ -599,7 +600,7 @@ CREATE TABLE exercise_secondary_muscles (
 
 ---
 
-### Step 36 — Create `workouts` table migration (V3)
+### Step 36 — Create `workouts` table migration (V3) ✅
 
 **File:** `V3__create_workouts_table.sql`
 
@@ -622,7 +623,7 @@ CREATE TABLE workouts (
 
 ---
 
-### Step 37 — Create `exercise_series` and `series` table migrations (V4, V5)
+### Step 37 — Create `exercise_series` and `series` table migrations (V4, V5) ✅
 
 **File:** `V4__create_exercise_series_table.sql`
 
@@ -671,7 +672,7 @@ CREATE TABLE series (
 
 ---
 
-### Step 38 — Create `AuditEmbeddable` JPA class
+### Step 38 — Create `AuditEmbeddable` JPA class ✅
 
 **Module:** `:infrastructure`  
 **Package:** `com.n1b3lung0.gymrat.infrastructure.adapter.output.persistence.entity`  
@@ -681,7 +682,7 @@ CREATE TABLE series (
 
 ---
 
-### Step 39 — Create `MediaEntity` JPA entity
+### Step 39 — Create `MediaEntity` JPA entity ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...persistence.entity`  
@@ -691,7 +692,7 @@ CREATE TABLE series (
 
 ---
 
-### Step 40 — Create `ExerciseEntity` JPA entity
+### Step 40 — Create `ExerciseEntity` JPA entity ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...persistence.entity`  
@@ -707,7 +708,7 @@ CREATE TABLE series (
 
 ---
 
-### Step 41 — Create `WorkoutEntity`, `ExerciseSeriesEntity`, `SeriesEntity` JPA entities
+### Step 41 — Create `WorkoutEntity`, `ExerciseSeriesEntity`, `SeriesEntity` JPA entities ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...persistence.entity`
@@ -722,7 +723,7 @@ All with `@SQLRestriction` + `@SQLDelete` + embedded `AuditEmbeddable`.
 
 ---
 
-### Step 42 — Create Spring Data repositories
+### Step 42 — Create Spring Data repositories ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...persistence.repository`  
@@ -737,7 +738,7 @@ All with `@SQLRestriction` + `@SQLDelete` + embedded `AuditEmbeddable`.
 
 ---
 
-### Step 43 — Create `ExercisePersistenceMapper`
+### Step 43 — Create `ExercisePersistenceMapper` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...persistence.mapper`  
@@ -753,7 +754,7 @@ Methods:
 
 ---
 
-### Step 44 — Create `WorkoutPersistenceMapper`, `ExerciseSeriesPersistenceMapper`, `SeriesPersistenceMapper`
+### Step 44 — Create `WorkoutPersistenceMapper`, `ExerciseSeriesPersistenceMapper`, `SeriesPersistenceMapper` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...persistence.mapper`
@@ -764,7 +765,7 @@ Same pattern as `ExercisePersistenceMapper`, each with `toEntity`, `toDomain`, `
 
 ---
 
-### Step 45 — Create `ExerciseJpaAdapter` and `MediaJpaAdapter`
+### Step 45 — Create `ExerciseJpaAdapter` and `MediaJpaAdapter` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...persistence`  
@@ -778,7 +779,7 @@ Same pattern as `ExercisePersistenceMapper`, each with `toEntity`, `toDomain`, `
 
 ---
 
-### Step 46 — Create `WorkoutJpaAdapter`, `ExerciseSeriesJpaAdapter`, `SeriesJpaAdapter`
+### Step 46 — Create `WorkoutJpaAdapter`, `ExerciseSeriesJpaAdapter`, `SeriesJpaAdapter` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...persistence`
@@ -789,7 +790,7 @@ Same pattern. `SeriesJpaAdapter.save(Series)` auto-computes `serialNumber` = `co
 
 ---
 
-### Step 47 — Create `PersistenceConfig` with JPA Auditing
+### Step 47 — Create `PersistenceConfig` with JPA Auditing ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...config`  
@@ -813,7 +814,7 @@ public class PersistenceConfig {
 
 ## Phase 5 — Infrastructure Layer: REST Controllers
 
-### Step 48 — Create `PageResponse<T>` record
+### Step 48 — Create `PageResponse<T>` record ✅
 
 **Module:** `:infrastructure`  
 **Package:** `com.n1b3lung0.gymrat.infrastructure.adapter.input.rest.dto`  
@@ -823,7 +824,7 @@ public class PersistenceConfig {
 
 ---
 
-### Step 49 — Create Exercise REST DTOs (request/response)
+### Step 49 — Create Exercise REST DTOs (request/response) ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...rest.dto`  
@@ -838,7 +839,7 @@ public class PersistenceConfig {
 
 ---
 
-### Step 50 — Create `ExerciseRestMapper`
+### Step 50 — Create `ExerciseRestMapper` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...rest.mapper`  
@@ -848,7 +849,7 @@ public class PersistenceConfig {
 
 ---
 
-### Step 51 — Create `ExerciseController`
+### Step 51 — Create `ExerciseController` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...rest`  
@@ -867,7 +868,7 @@ Includes: `@Valid`, `@Idempotency-Key` header on POST/PUT, OpenAPI annotations (
 
 ---
 
-### Step 52 — Create Workout REST DTOs and `WorkoutRestMapper`
+### Step 52 — Create Workout REST DTOs and `WorkoutRestMapper` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...rest.dto`, `...rest.mapper`  
@@ -879,7 +880,7 @@ Includes: `@Valid`, `@Idempotency-Key` header on POST/PUT, OpenAPI annotations (
 
 ---
 
-### Step 53 — Create `WorkoutController`
+### Step 53 — Create `WorkoutController` ✅
 
 Endpoints:
 - `POST /api/v1/workouts` → `201 Created`
@@ -892,7 +893,7 @@ Endpoints:
 
 ---
 
-### Step 54 — Create ExerciseSeries REST DTOs, Mapper and Controller
+### Step 54 — Create ExerciseSeries REST DTOs, Mapper and Controller ✅
 
 Endpoints:
 - `POST /api/v1/workouts/{workoutId}/exercises` → adds ExerciseSeries → `201 Created`
@@ -904,7 +905,7 @@ Endpoints:
 
 ---
 
-### Step 55 — Create Series REST DTOs, Mapper and Controller
+### Step 55 — Create Series REST DTOs, Mapper and Controller ✅
 
 Endpoints:
 - `POST /api/v1/workouts/{workoutId}/exercises/{exerciseSeriesId}/series` → `201 Created`
@@ -919,7 +920,7 @@ Endpoints:
 
 ## Phase 5 (cont.) — Config Beans and Event Publisher (Steps 56–58)
 
-### Step 56 — Create `ExerciseConfig`
+### Step 56 — Create `ExerciseConfig` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...config`  
@@ -938,7 +939,7 @@ Register as `@Bean`:
 
 ---
 
-### Step 57 — Create `WorkoutConfig`, `ExerciseSeriesConfig`, `SeriesConfig`
+### Step 57 — Create `WorkoutConfig`, `ExerciseSeriesConfig`, `SeriesConfig` ✅
 
 Same pattern as `ExerciseConfig` for the remaining three aggregates.
 
@@ -946,7 +947,7 @@ Same pattern as `ExerciseConfig` for the remaining three aggregates.
 
 ---
 
-### Step 58 — Create `SpringDomainEventPublisher` (DomainEventPublisherPort adapter)
+### Step 58 — Create `SpringDomainEventPublisher` (DomainEventPublisherPort adapter) ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...adapter.output.messaging`  
@@ -958,7 +959,7 @@ Same pattern as `ExerciseConfig` for the remaining three aggregates.
 
 ## Phase 6 — Cross-Cutting Concerns
 
-### Step 59 — Create `GlobalExceptionHandler`
+### Step 59 — Create `GlobalExceptionHandler` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...adapter.input.rest`  
@@ -970,7 +971,7 @@ Handles: `NotFoundException` → 404, `BusinessRuleViolationException` → 422, 
 
 ---
 
-### Step 60 — Create `OpenApiConfig`
+### Step 60 — Create `OpenApiConfig` ✅
 
 **Module:** `:infrastructure`  
 **Package:** `...config`  
@@ -982,7 +983,7 @@ Add `springdoc-openapi-starter-webmvc-ui` to `libs.versions.toml` and `infrastru
 
 ---
 
-### Step 61 — Configure structured logging and Micrometer counters
+### Step 61 — Configure structured logging and Micrometer counters ✅
 
 **Module:** `:infrastructure`  
 **Files:**
@@ -993,7 +994,7 @@ Add `springdoc-openapi-starter-webmvc-ui` to `libs.versions.toml` and `infrastru
 
 ---
 
-### Step 62 — Create Flyway seed migration (V6)
+### Step 62 — Create Flyway seed migration (V6) ✅
 
 **File:** `V6__seed_sample_data.sql`
 
@@ -1011,7 +1012,7 @@ Insert sample data:
 
 ## Phase 7 — Testing
 
-### Step 63 — Domain unit tests: `ExerciseTest`
+### Step 63 — Domain unit tests: `ExerciseTest` ✅
 
 **Module:** `:domain`  
 **File:** `ExerciseTest.java`
@@ -1027,7 +1028,7 @@ Tests:
 
 ---
 
-### Step 64 — Domain unit tests: `WorkoutTest`, `SeriesTest`, `ExerciseSeriesTest`
+### Step 64 — Domain unit tests: `WorkoutTest`, `SeriesTest`, `ExerciseSeriesTest` ✅
 
 **Module:** `:domain`
 
@@ -1039,7 +1040,7 @@ Tests:
 
 ---
 
-### Step 65 — Application unit tests: `CreateExerciseHandlerTest`
+### Step 65 — Application unit tests: `CreateExerciseHandlerTest` ✅
 
 **Module:** `:application`
 
@@ -1054,7 +1055,7 @@ Tests:
 
 ---
 
-### Step 66 — Application unit tests: remaining handlers
+### Step 66 — Application unit tests: remaining handlers ✅
 
 **Module:** `:application`
 
@@ -1165,11 +1166,388 @@ Helper methods append `System.nanoTime()` to exercise names to avoid constraint 
 
 ---
 
+## Phase 7.5 — Structural Alignment with CLAUDE.md
+
+> These steps bring the codebase in line with the conventions defined in `CLAUDE.md` that were added
+> or clarified after Phase 7 was completed. Each step is independently compilable and testable.
+> They must be completed **before** Phase 8.
+>
+> **Steps 71 and 72 are the most impactful** — they change the physical layout of the entire
+> codebase. All subsequent steps in this phase (and Phase 8) depend on this new structure.
+
+---
+
+### Step 71 — Migrate from multi-module Gradle to single-module project ✅
+
+**Goal:** collapse the three Gradle submodules (`:domain`, `:application`, `:infrastructure`) into a
+single Gradle module. The build simplifies to one `build.gradle.kts`, one compiled output, and a
+single `src/` source tree. This is the prerequisite for the feature-first package restructure in Step 72.
+
+**Why now:** the multi-module split enforced layer boundaries at the Gradle level, which was a valid
+interim approach. Now that ArchUnit enforces the same boundaries at the package level (Step 70),
+the Gradle modules add complexity without additional safety. A single module with feature-first
+packages is the structure defined in `CLAUDE.md`.
+
+**Files to change:**
+
+1. **`settings.gradle.kts`** — remove `include(":domain")`, `include(":application")`,
+   `include(":infrastructure")`; the root project is now the only module.
+
+2. **`build.gradle.kts`** (root) — merge the three submodule `build.gradle.kts` files into the
+   root one: combine all dependencies (`spring-boot-web`, `spring-boot-jpa`, `spring-boot-validation`,
+   `archunit`, `testcontainers`, etc.) into a single `dependencies {}` block; keep `bootJar` task;
+   keep Spotless and Checkstyle plugins.
+
+3. **Remove** `domain/build.gradle.kts`, `application/build.gradle.kts`,
+   `infrastructure/build.gradle.kts`.
+
+4. **Move all source files** from the three submodule source trees into the single `src/` tree,
+   preserving their package names exactly (package declarations do not change in this step —
+   that happens in Step 72):
+   - `domain/src/main/java/**` → `src/main/java/**`
+   - `domain/src/test/java/**` → `src/test/java/**`
+   - `application/src/main/java/**` → `src/main/java/**`
+   - `application/src/test/java/**` → `src/test/java/**`
+   - `infrastructure/src/main/java/**` → `src/main/java/**`
+   - `infrastructure/src/test/java/**` → `src/test/java/**`
+   - `infrastructure/src/main/resources/**` → `src/main/resources/**`
+   - `infrastructure/src/test/resources/**` → `src/test/resources/**`
+
+5. **`GymratApplication.java`** — already in the root package; no change needed.
+
+6. **Delete** the now-empty `domain/`, `application/`, `infrastructure/` directories.
+
+**Important:** in this step package names are **not changed** — all classes keep their current
+`com.n1b3lung0.gymrat.domain.*`, `com.n1b3lung0.gymrat.application.*`,
+`com.n1b3lung0.gymrat.infrastructure.*` packages. The rename happens in Step 72.
+
+**Verify:**
+```bash
+./gradlew compileJava          # single compilation unit — no subproject prefix needed
+./gradlew test                 # all existing tests pass (same packages, same class names)
+./gradlew bootRun              # app starts, Flyway runs, Swagger UI accessible
+```
+
+---
+
+### Step 72 — Restructure packages from layer-first to feature-first
+
+**Goal:** reorganise all source files from the current layer-first package structure into the
+feature-first structure defined in `CLAUDE.md §3`. This is a pure rename/move — zero behaviour
+change.
+
+**Target package structure** (single `src/main/java/com/n1b3lung0/gymrat/`):
+
+```
+com.n1b3lung0.gymrat/
+│
+├── shared/
+│   ├── domain/
+│   │   ├── exception/          ← DomainException, NotFoundException, BusinessRuleViolationException,
+│   │   │                         ConflictException  (moved from domain.exception)
+│   │   └── model/              ← AuditFields, Media  (moved from domain.model — genuinely shared VOs)
+│   └── infrastructure/
+│       ├── config/             ← GymratApplication, PersistenceConfig, OpenApiConfig, FlywayConfig
+│       └── persistence/        ← AuditEmbeddable  (shared JPA base)
+│
+├── exercise/
+│   ├── domain/
+│   │   ├── model/              ← Exercise, ExerciseId, Level, Muscle, Routine
+│   │   ├── event/              ← ExerciseEvent, ExerciseCreated, ExerciseUpdated, ExerciseDeleted
+│   │   └── exception/          ← ExerciseNotFoundException, DuplicateExerciseNameException,
+│   │                             InvalidRpeIntensityException
+│   ├── application/
+│   │   ├── port/
+│   │   │   ├── input/
+│   │   │   │   ├── command/    ← CreateExerciseUseCase, UpdateExerciseUseCase, DeleteExerciseUseCase
+│   │   │   │   └── query/      ← GetExerciseByIdUseCase, ListExercisesUseCase
+│   │   │   └── output/         ← ExerciseRepositoryPort, ExerciseQueryPort, MediaRepositoryPort
+│   │   ├── command/            ← CreateExerciseHandler, UpdateExerciseHandler, DeleteExerciseHandler
+│   │   ├── query/              ← GetExerciseByIdHandler, ListExercisesHandler
+│   │   └── dto/                ← CreateExerciseCommand, UpdateExerciseCommand, DeleteExerciseCommand,
+│   │                             GetExerciseByIdQuery, ListExercisesQuery,
+│   │                             ExerciseDetailView, ExerciseSummaryView, MediaView
+│   └── infrastructure/
+│       ├── adapter/
+│       │   ├── input/rest/     ← ExerciseController, CreateExerciseRequest, UpdateExerciseRequest,
+│       │   │                     ExerciseResponse, ExerciseSummaryResponse, ExerciseRestMapper
+│       │   └── output/
+│       │       ├── persistence/            ← ExerciseJpaAdapter, MediaJpaAdapter
+│       │       ├── persistence/entity/     ← ExerciseEntity, MediaEntity
+│       │       ├── persistence/mapper/     ← ExercisePersistenceMapper
+│       │       └── persistence/repository/ ← SpringExerciseRepository, SpringMediaRepository
+│       └── config/             ← ExerciseConfig
+│
+├── workout/
+│   ├── domain/
+│   │   ├── model/              ← Workout, WorkoutId
+│   │   └── event/              ← WorkoutEvent, WorkoutStarted, WorkoutFinished
+│   │   └── exception/          ← WorkoutNotFoundException, WorkoutAlreadyFinishedException
+│   ├── application/
+│   │   ├── port/input/command/ ← CreateWorkoutUseCase, FinishWorkoutUseCase, DeleteWorkoutUseCase
+│   │   ├── port/input/query/   ← GetWorkoutByIdUseCase, ListWorkoutsUseCase
+│   │   ├── port/output/        ← WorkoutRepositoryPort, WorkoutQueryPort
+│   │   ├── command/            ← CreateWorkoutHandler, FinishWorkoutHandler, DeleteWorkoutHandler
+│   │   ├── query/              ← GetWorkoutByIdHandler, ListWorkoutsHandler
+│   │   └── dto/                ← Commands, Queries, WorkoutDetailView, WorkoutSummaryView
+│   └── infrastructure/
+│       ├── adapter/input/rest/ ← WorkoutController + DTOs + Mapper
+│       ├── adapter/output/persistence/ ← WorkoutJpaAdapter, WorkoutEntity,
+│       │                                  WorkoutPersistenceMapper, SpringWorkoutRepository
+│       └── config/             ← WorkoutConfig
+│
+├── exerciseseries/
+│   ├── domain/
+│   │   ├── model/              ← ExerciseSeries, ExerciseSeriesId
+│   │   └── exception/          ← ExerciseSeriesNotFoundException
+│   ├── application/
+│   │   ├── port/input/command/ ← AddExerciseToWorkoutUseCase, RemoveExerciseFromWorkoutUseCase
+│   │   ├── port/input/query/   ← GetExerciseSeriesByIdUseCase, ListExerciseSeriesByWorkoutUseCase
+│   │   ├── port/output/        ← ExerciseSeriesRepositoryPort, ExerciseSeriesQueryPort
+│   │   ├── command/            ← AddExerciseToWorkoutHandler, RemoveExerciseFromWorkoutHandler
+│   │   ├── query/              ← GetExerciseSeriesByIdHandler, ListExerciseSeriesByWorkoutHandler
+│   │   └── dto/                ← Commands, Queries, ExerciseSeriesDetailView, ExerciseSeriesSummaryView
+│   └── infrastructure/
+│       ├── adapter/input/rest/ ← ExerciseSeriesController + DTOs + Mapper
+│       ├── adapter/output/persistence/ ← ExerciseSeriesJpaAdapter, ExerciseSeriesEntity,
+│       │                                  ExerciseSeriesPersistenceMapper, SpringExerciseSeriesRepository
+│       └── config/             ← ExerciseSeriesConfig
+│
+├── series/
+│   ├── domain/
+│   │   ├── model/              ← Series, SeriesId, RestTime
+│   │   ├── event/              ← SeriesEvent, SeriesCreated
+│   │   └── exception/          ← SeriesNotFoundException
+│   ├── application/
+│   │   ├── port/input/command/ ← RecordSeriesUseCase, UpdateSeriesUseCase, DeleteSeriesUseCase
+│   │   ├── port/input/query/   ← GetSeriesByIdUseCase, ListSeriesByExerciseSeriesUseCase
+│   │   ├── port/output/        ← SeriesRepositoryPort, SeriesQueryPort
+│   │   ├── command/            ← RecordSeriesHandler, UpdateSeriesHandler, DeleteSeriesHandler
+│   │   ├── query/              ← GetSeriesByIdHandler, ListSeriesByExerciseSeriesHandler
+│   │   └── dto/                ← Commands, Queries, SeriesDetailView, SeriesSummaryView
+│   └── infrastructure/
+│       ├── adapter/input/rest/ ← SeriesController + DTOs + Mapper
+│       ├── adapter/output/persistence/ ← SeriesJpaAdapter, SeriesEntity,
+│       │                                  SeriesPersistenceMapper, SpringSeriesRepository
+│       └── config/             ← SeriesConfig
+│
+└── shared/infrastructure/adapter/output/messaging/
+                            ← SpringDomainEventPublisher
+```
+
+**Migration rules:**
+- Every `import` statement in every Java file must be updated to the new package path.
+- `GymratApplication.java` moves to `shared.infrastructure.config` but its `@SpringBootApplication`
+  `scanBasePackages` must cover `com.n1b3lung0.gymrat` (the whole root) so all features are picked up.
+- Flyway migrations stay in `src/main/resources/db/migration/` — no change.
+- `application.yaml` stays in `src/main/resources/` — no change.
+- `ArchitectureTest` package patterns must be updated to match the new feature-first paths.
+
+**Verify:**
+```bash
+./gradlew compileJava          # zero compilation errors after all imports updated
+./gradlew test                 # all tests pass with new package names
+./gradlew bootRun              # app starts, all endpoints respond correctly
+```
+
+---
+
+### Step 73 — Create `ObjectMother` fixtures for domain aggregates
+
+**Module:** single module (after Step 71–72)  
+**Goal:** centralise test fixture construction following the ObjectMother pattern from CLAUDE.md §20.
+
+**Files to create** (under `src/test/java/com/n1b3lung0/gymrat/`):
+- `exercise/domain/ExerciseMother.java` — `pending()`, `withLevel(Level)`, `withName(String)`
+- `workout/domain/WorkoutMother.java` — `started()`, `finished()`
+- `series/domain/SeriesMother.java` — `recorded()`, `withIntensity(int)`
+- `exerciseseries/domain/ExerciseSeriesMother.java` — `any()`
+- `shared/domain/model/ExerciseIdMother.java`, `WorkoutIdMother.java`, `SeriesIdMother.java`, `ExerciseSeriesIdMother.java`
+- `exercise/application/CreateExerciseCommandMother.java` — `valid()`, `withName(String)`
+
+**Rules (from CLAUDE.md §20):**
+- Method names describe **business states**, not technical parameters.
+- One `*Mother` per Aggregate or complex Value Object.
+- `*Mother` classes for shared Value Objects go in `shared/domain/model/` test sources.
+- **Never** used in production code.
+
+**Verify:** `./gradlew test` — all existing tests still green (Mothers compile and are used by at least one test each).
+
+---
+
+### Step 74 — Refactor domain unit tests to use ObjectMother
+
+**Module:** single module  
+**Goal:** replace inline object construction in `ExerciseTest`, `WorkoutTest`, `SeriesTest`, `ExerciseSeriesTest`, `CreateExerciseHandlerTest` and remaining handler tests with the corresponding `*Mother` calls.
+
+**Before:**
+```java
+Exercise exercise = Exercise.create("Bench Press", "desc", Level.INTERMEDIATE,
+    EnumSet.of(Routine.PUSH), Muscle.CHEST, EnumSet.of(Muscle.TRICEPS), null, null);
+```
+**After:**
+```java
+Exercise exercise = ExerciseMother.pending();
+```
+
+**Verify:** `./gradlew test` — all green, test code noticeably leaner.
+
+---
+
+### Step 75 — Add `@ConfigurationProperties` for externalised configuration
+
+**Module:** single module  
+**Goal:** replace raw `@Value` / `Environment` injections with typed `@ConfigurationProperties` records per CLAUDE.md §32.
+
+**Files to create** (under `src/main/java/com/n1b3lung0/gymrat/shared/infrastructure/config/properties/`):
+- `DatabaseProperties.java` — `@ConfigurationProperties(prefix = "app.database")` record: `url`, `username`, `connectionTimeout`, `maxPoolSize`
+- `AppProperties.java` — `@ConfigurationProperties(prefix = "app")` record wrapping sub-properties as needed
+
+**Files to update:**
+- `shared/infrastructure/config/PersistenceConfig.java` — enable via `@EnableConfigurationProperties`
+- `src/main/resources/application.yaml` — add `app.database.*` entries mapping to existing `spring.datasource.*`
+
+**Rules:**
+- `@ConfigurationProperties` classes live only in `shared/infrastructure/config/properties/`.
+- No `@Value` or `Environment` outside infrastructure.
+- Secrets (`password`, `api-key`) never have hardcoded defaults in yaml.
+
+**Verify:** `./gradlew bootRun` — app starts; `./gradlew test` — all green.
+
+---
+
+### Step 76 — Add `pre-commit` hook script and `.env.example`
+
+**Goal:** implement the developer workflow safety net from CLAUDE.md §22 and §16.
+
+**Files to create:**
+- `scripts/setup-hooks.sh` — installs `.git/hooks/pre-commit` that runs `spotlessCheck` + `checkstyleMain`; executable; uses `--daemon` flag
+- `.env.example` — lists all required environment variables with empty values and comments; committed to repo
+- Update `.gitignore` — ensure `.env` is listed
+
+**Verify:**
+```bash
+chmod +x scripts/setup-hooks.sh && ./scripts/setup-hooks.sh
+# Then make a trivial change and git commit — hook runs spotless + checkstyle
+```
+
+---
+
+### Step 77 — Add GitHub Actions CI workflow
+
+**Goal:** implement the CI pipeline from CLAUDE.md §34.
+
+**File to create:** `.github/workflows/ci.yml`
+
+Stages (in order):
+1. `Format check` — `./gradlew spotlessCheck`
+2. `Style check` — `./gradlew checkstyleMain`
+3. `Unit tests — domain + application` — `./gradlew test --tests "com.n1b3lung0.gymrat.*.domain..*" --tests "com.n1b3lung0.gymrat.*.application..*"`
+4. `Architecture tests` — `./gradlew test --tests "*ArchitectureTest"`
+5. `Integration tests` — `./gradlew test` (full suite)
+
+**Configuration:**
+- Runs on: `push` to `main`/`develop`, `pull_request` to `main`/`develop`
+- `concurrency` cancel-in-progress on feature branches, not on `main`
+- `permissions: contents: read` (minimum privilege)
+- Uses `gradle/actions/setup-gradle@v4` with `java-version: '25'`, `distribution: 'temurin'`
+- Uploads test reports as artifacts on failure
+
+**Verify:** push to `develop` branch → GitHub Actions pipeline passes green.
+
+---
+
+### Step 78 — Add Dependabot configuration
+
+**Goal:** automated dependency updates per CLAUDE.md §35.
+
+**File to create:** `.github/dependabot.yml`
+
+Configuration:
+- `gradle` ecosystem — weekly on Monday 08:00 Europe/Madrid; groups `spring`, `testing`; limit 5 open PRs
+- `github-actions` ecosystem — weekly on Monday 08:00 Europe/Madrid
+- Labels: `dependencies` + ecosystem label on each group
+
+**Verify:** file is valid YAML; `dependabot.yml` appears in `.github/` directory.
+
+---
+
+### Step 79 — Add PR template
+
+**Goal:** standardise pull request descriptions per CLAUDE.md §24.
+
+**File to create:** `.github/pull_request_template.md`
+
+Sections:
+- What does this PR do? (one-liner)
+- Motivation / context (link to issue)
+- Type of change (checkboxes: feat / fix / refactor / chore / docs)
+- Checklist: tests added, ArchUnit passing, no Spring in domain/application, Flyway migration if schema changed, `.env.example` updated if new env vars
+
+**Verify:** open a draft PR on GitHub — template auto-populates the description field.
+
+---
+
+### Step 80 — Harden `ArchitectureTest` with feature-isolation rules
+
+**Module:** single module  
+**Goal:** extend `ArchitectureTest` with the inter-feature and Spring-free rules from CLAUDE.md §15 that are relevant to the current single-feature codebase, plus rules that will catch regressions as new features are added.
+
+**New rules to add:**
+- `eachFeatureDomainIsIsolated` — no feature's domain imports another feature's domain, application or infrastructure
+- `persistenceEntitiesNotExposedOutsideInfrastructure` — classes ending `Entity` must reside in `...infrastructure.adapter.output.persistence.entity`
+- `mappersMustResideInMapperPackage` — classes ending `PersistenceMapper` reside in `...persistence.mapper`; classes ending `RestMapper` reside in `...rest.mapper`
+- `configClassesMustResideInConfigPackage` — classes ending `Config` reside in `...infrastructure.config`
+- `repositoryPortsMustResideInCorrectPackage` — interfaces ending `RepositoryPort` reside in `...domain` or `...application.port.output`; interfaces ending `QueryPort` reside in `...application.port.output`
+- `sharedMustNotImportFeaturePackages` — `shared.*` must not import any `exercise.*`, `workout.*`, `series.*` or `exerciseseries.*`
+
+**Verify:** `./gradlew test --tests "*ArchitectureTest"` — all rules pass including new ones.
+
+---
+
+### Step 81 — Add Dockerfile (multi-stage) and production compose profile
+
+**Goal:** containerise the application per CLAUDE.md §27 and §28.
+
+**Files to create / update:**
+- `Dockerfile` (project root) — two-stage: `eclipse-temurin:25-jdk-alpine AS builder` running `./gradlew bootJar`, then `eclipse-temurin:25-jre-alpine AS runtime` with non-root `appuser`, `HEALTHCHECK`, and JVM container flags (`-XX:+UseContainerSupport`, `-XX:MaxRAMPercentage=75.0`)
+- `compose.yaml` (project root) — add `app` service referencing the built image; link to `postgres`; inject `SPRING_DATASOURCE_*` and `SPRING_PROFILES_ACTIVE=local` via env vars; `depends_on: postgres: condition: service_healthy`
+- `src/main/resources/application.yaml` — add `prod` profile section: `ddl-auto: validate`, no docker-compose
+
+**Verify:**
+```bash
+docker compose up --build
+curl http://localhost:8080/actuator/health   # → {"status":"UP"}
+```
+
+---
+
+### Step 82 — Add `README.md` with full project documentation
+
+**Goal:** provide onboarding documentation per CLAUDE.md §28 (deployment) and general good practice.
+
+**File to create:** `README.md` (project root)
+
+Sections:
+1. **Project overview** — what GymRat is, tech stack table
+2. **Architecture** — hexagonal / DDD / CQRS summary; link to `CLAUDE.md`
+3. **Prerequisites** — Java 25, Docker, Gradle 9.x
+4. **Local setup** — clone → copy `.env.example` → `./scripts/setup-hooks.sh` → `docker compose up` → `./gradlew bootRun`
+5. **Environment variables** — table of all vars with description and whether required/optional
+6. **Running tests** — full test suite command, individual module commands, ArchUnit command
+7. **API quick-start** — `curl` examples for create exercise, start workout, record series
+8. **Conventional commits** — brief reference table of commit types
+
+**Verify:** `README.md` renders correctly on GitHub; all `curl` examples return expected HTTP status codes against a running local instance.
+
+---
+
+---
+
 ## Phase 8 — End-to-End: Integration, Security & Deployment
 
-### Step 71 — Full integration test: Exercise happy path
+### Step 83 — Full integration test: Exercise happy path
 
-**Module:** `:infrastructure`  
 **File:** `ExerciseIntegrationTest.java`  
 **Annotation:** `@SpringBootTest(webEnvironment = RANDOM_PORT)` + Testcontainers PostgreSQL
 
@@ -1178,13 +1556,12 @@ Tests (real HTTP via `TestRestTemplate`):
 - `shouldReturn409_whenDuplicateExerciseName()`
 - `shouldSoftDeleteExercise_andNotReturnItAfterwards()`
 
-**Verify:** `./gradlew :infrastructure:test --tests "*ExerciseIntegrationTest"` — green.
+**Verify:** `./gradlew test --tests "*ExerciseIntegrationTest"` — green.
 
 ---
 
-### Step 72 — Full integration test: Workout + ExerciseSeries + Series happy path
+### Step 84 — Full integration test: Workout + ExerciseSeries + Series happy path
 
-**Module:** `:infrastructure`  
 **File:** `WorkoutIntegrationTest.java`
 
 Full flow:
@@ -1195,13 +1572,12 @@ Full flow:
 5. Verify `serialNumber` is auto-incremented (1, 2, 3)
 6. Finish the Workout → `200`
 
-**Verify:** `./gradlew :infrastructure:test --tests "*WorkoutIntegrationTest"` — green.
+**Verify:** `./gradlew test --tests "*WorkoutIntegrationTest"` — green.
 
 ---
 
-### Step 73 — Full integration test: soft-delete cascade behaviour
+### Step 85 — Full integration test: soft-delete cascade behaviour
 
-**Module:** `:infrastructure`  
 **File:** `SoftDeleteIntegrationTest.java`
 
 Tests:
@@ -1209,13 +1585,12 @@ Tests:
 - Deleting an Exercise soft-deletes it; exercises still retrievable by ID before delete
 - Deleted resources do not appear in paginated list responses
 
-**Verify:** `./gradlew :infrastructure:test --tests "*SoftDeleteIntegrationTest"` — green.
+**Verify:** `./gradlew test --tests "*SoftDeleteIntegrationTest"` — green.
 
 ---
 
-### Step 74 — Validation integration tests
+### Step 86 — Validation integration tests
 
-**Module:** `:infrastructure`  
 **File:** `ValidationIntegrationTest.java`
 
 Tests:
@@ -1224,13 +1599,12 @@ Tests:
 - `POST /api/v1/workouts/{workoutId}/exercises/{esId}/series` with `intensity=11` → `422`
 - `PATCH /api/v1/workouts/{id}/finish` when already finished → `422`
 
-**Verify:** `./gradlew :infrastructure:test --tests "*ValidationIntegrationTest"` — green.
+**Verify:** `./gradlew test --tests "*ValidationIntegrationTest"` — green.
 
 ---
 
-### Step 75 — Pagination and sorting integration tests
+### Step 87 — Pagination and sorting integration tests
 
-**Module:** `:infrastructure`  
 **File:** `PaginationIntegrationTest.java`
 
 Uses seed data (V6 migration).
@@ -1241,104 +1615,174 @@ Tests:
 - `GET /api/v1/workouts?page=0&size=1` → returns 1 item
 - Empty page beyond total → `content: []`, no error
 
-**Verify:** `./gradlew :infrastructure:test --tests "*PaginationIntegrationTest"` — green.
+**Verify:** `./gradlew test --tests "*PaginationIntegrationTest"` — green.
 
 ---
 
-### Step 76 — Add Spring Security basic authentication skeleton
+### Step 88 — Add Spring Security basic authentication skeleton
 
-**Module:** `:infrastructure`  
-**Package:** `...config`  
+**Package:** `com.n1b3lung0.gymrat.shared.infrastructure.config`  
 **File:** `SecurityConfig.java`
 
-- Add `spring-boot-starter-security` to `infrastructure/build.gradle.kts`
+- Add `spring-boot-starter-security` to `build.gradle.kts`
 - `SecurityConfig` with `SecurityFilterChain`: permit `GET /actuator/health`, `GET /swagger-ui/**`, `GET /v3/api-docs/**`; require HTTP Basic for all other endpoints
 - Replace `auditorProvider` placeholder: read principal name from `SecurityContextHolder`
 - `SecurityConfig` declares an in-memory user (`gymrat` / `gymrat`) for local dev
 
-**Verify:** `./gradlew :infrastructure:bootRun` — unauthenticated `GET /api/v1/exercises` returns `401`.
+**Verify:** `./gradlew bootRun` — unauthenticated `GET /api/v1/exercises` returns `401`.
 
 ---
 
-### Step 77 — Update controller and integration tests for authentication
+### Step 89 — Update controller and integration tests for authentication
 
-**Module:** `:infrastructure`
-
-- Update `@WebMvcTest` controller tests: add `@WithMockUser` or `Authorization: Basic` header
+- Update controller tests: add `Authorization: Basic` header
 - Update `ExerciseIntegrationTest`, `WorkoutIntegrationTest`, `SoftDeleteIntegrationTest`, `ValidationIntegrationTest`, `PaginationIntegrationTest`: set credentials on `TestRestTemplate`
 
-**Verify:** `./gradlew :infrastructure:test` — all tests green with security enabled.
+**Verify:** `./gradlew test` — all tests green with security enabled.
 
 ---
 
-### Step 78 — Dockerfile and docker-compose production profile
+### Step 90 — Performance baseline and N+1 verification
 
-**Files:**
-- `Dockerfile` (root) — multi-stage build: `gradle build` → `eclipse-temurin:21-jre` runtime image
-- `compose.yaml` — add `app` service referencing the image, linked to `postgres`; `POSTGRES_*` and `SPRING_DATASOURCE_*` via env vars
+**Goal:** confirm no N+1 queries exist on the main read paths.
 
-**Verify:** `docker compose up --build` — app starts, `GET http://localhost:8080/actuator/health` returns `{"status":"UP"}`.
+- Enable `spring.jpa.properties.hibernate.generate_statistics=true` in `local` profile
+- Run `GET /api/v1/exercises` with 5 seed exercises — confirm exactly **1 SQL query**
+- Run `GET /api/v1/workouts/{id}` — confirm at most **3 queries** (workout + exerciseSeries + series)
+- Add `spring.jpa.properties.hibernate.generate_statistics=false` guard in `prod` profile
+- Document findings in `README.md`
 
----
-
-### Step 79 — Add GitHub Actions CI pipeline
-
-**File:** `.github/workflows/ci.yml`
-
-Stages:
-1. `build` — `./gradlew build` (compileJava + test all modules)
-2. `docker` (on `main`) — build Docker image, push to GitHub Container Registry
-
-**Verify:** push to `main` branch → GitHub Actions pipeline passes green.
+**Verify:** `./gradlew test` — all green; no extra queries observed in logs.
 
 ---
 
-### Step 80 — Performance baseline and README
+### Step 91 — OWASP Dependency Check
 
-**Files:**
-- `README.md` — project overview, local setup instructions, environment variables reference, API quick-start examples
-- Add `spring.jpa.properties.hibernate.generate_statistics=false` production guard
-- Verify N+1 queries are absent: enable `spring.jpa.show-sql=true` locally, run `GET /api/v1/exercises` and `GET /api/v1/workouts/{id}`, confirm no unexpected extra queries
+**Goal:** security scanning per CLAUDE.md §25.
 
-**Verify:** `GET /api/v1/exercises` with 5 seed exercises produces exactly **1 SQL query**; `GET /api/v1/workouts/{id}` produces at most **3 queries** (workout + exerciseSeries + series). All tests still green.
+**Files to update:**
+- `gradle/libs.versions.toml` — add `owasp-dependency-check` plugin entry
+- `build.gradle.kts` (root) — apply plugin; `failBuildOnCVSS = 7.0f`; HTML report output
+- `.github/workflows/ci.yml` — add `OWASP Dependency Check` step before deploy; upload report as artifact
+
+**Verify:** `./gradlew dependencyCheckAnalyze` — report generated at `build/reports/dependency-check/`; no HIGH/CRITICAL CVEs (or suppressions documented).
+
+---
+
+### Step 92 — GitHub release workflow and semantic versioning
+
+**Goal:** automated release pipeline per CLAUDE.md §26 and §27.
+
+**Files to create / update:**
+- `.github/workflows/release.yml` — triggers on `push: tags: ['v*.*.*']`; runs full CI, builds Docker image, pushes to GHCR, creates GitHub Release with auto-generated notes from Conventional Commits
+- `Dockerfile` already exists from Step 81 — verify multi-stage build works in CI context
+- Tag `v0.1.0` as the first release candidate
+
+**Verify:** push tag `v0.1.0` → GitHub Actions `release` workflow passes; Docker image appears in GHCR; GitHub Release page shows auto-generated changelog.
 
 ---
 
 ## Quick Reference: Package Structure
 
+> After Steps 71–72 (single-module + feature-first migration)
+
 ```
-domain/src/main/java/com/n1b3lung0/gymrat/
-  domain/
-    model/          ← Exercise, Workout, ExerciseSeries, Series, all enums, all VOs, AuditFields
-    event/          ← ExerciseEvent, WorkoutEvent, SeriesEvent (sealed + records)
-    exception/      ← DomainException hierarchy + concrete exceptions
-    repository/     ← *RepositoryPort interfaces (Output Ports of domain)
+src/main/java/com/n1b3lung0/gymrat/
+│
+├── shared/
+│   ├── domain/
+│   │   ├── exception/      ← DomainException, NotFoundException, BusinessRuleViolationException,
+│   │   │                     ConflictException
+│   │   └── model/          ← AuditFields, Media (shared VOs)
+│   └── infrastructure/
+│       ├── config/         ← GymratApplication, PersistenceConfig, OpenApiConfig,
+│       │                     SecurityConfig, properties/
+│       ├── persistence/    ← AuditEmbeddable
+│       └── adapter/output/messaging/ ← SpringDomainEventPublisher
+│
+├── exercise/
+│   ├── domain/
+│   │   ├── model/          ← Exercise, ExerciseId, Level, Muscle, Routine
+│   │   ├── event/          ← ExerciseEvent, ExerciseCreated, ExerciseUpdated, ExerciseDeleted
+│   │   └── exception/      ← ExerciseNotFoundException, DuplicateExerciseNameException,
+│   │                         InvalidRpeIntensityException
+│   ├── application/
+│   │   ├── port/input/command/ ← CreateExerciseUseCase, UpdateExerciseUseCase, DeleteExerciseUseCase
+│   │   ├── port/input/query/   ← GetExerciseByIdUseCase, ListExercisesUseCase
+│   │   ├── port/output/        ← ExerciseRepositoryPort, ExerciseQueryPort, MediaRepositoryPort
+│   │   ├── command/            ← CreateExerciseHandler, UpdateExerciseHandler, DeleteExerciseHandler
+│   │   ├── query/              ← GetExerciseByIdHandler, ListExercisesHandler
+│   │   └── dto/                ← Commands, Queries, ExerciseDetailView, ExerciseSummaryView, MediaView
+│   └── infrastructure/
+│       ├── adapter/input/rest/             ← ExerciseController, DTOs, ExerciseRestMapper
+│       ├── adapter/output/persistence/     ← ExerciseJpaAdapter, MediaJpaAdapter
+│       ├── adapter/output/persistence/entity/   ← ExerciseEntity, MediaEntity
+│       ├── adapter/output/persistence/mapper/   ← ExercisePersistenceMapper
+│       ├── adapter/output/persistence/repository/ ← SpringExerciseRepository, SpringMediaRepository
+│       └── config/             ← ExerciseConfig
+│
+├── workout/
+│   ├── domain/
+│   │   ├── model/          ← Workout, WorkoutId
+│   │   ├── event/          ← WorkoutEvent, WorkoutStarted, WorkoutFinished
+│   │   └── exception/      ← WorkoutNotFoundException, WorkoutAlreadyFinishedException
+│   ├── application/
+│   │   ├── port/input/command/ ← CreateWorkoutUseCase, FinishWorkoutUseCase, DeleteWorkoutUseCase
+│   │   ├── port/input/query/   ← GetWorkoutByIdUseCase, ListWorkoutsUseCase
+│   │   ├── port/output/        ← WorkoutRepositoryPort, WorkoutQueryPort
+│   │   ├── command/            ← CreateWorkoutHandler, FinishWorkoutHandler, DeleteWorkoutHandler
+│   │   ├── query/              ← GetWorkoutByIdHandler, ListWorkoutsHandler
+│   │   └── dto/                ← Commands, Queries, WorkoutDetailView, WorkoutSummaryView
+│   └── infrastructure/
+│       ├── adapter/input/rest/             ← WorkoutController, DTOs, WorkoutRestMapper
+│       ├── adapter/output/persistence/     ← WorkoutJpaAdapter
+│       ├── adapter/output/persistence/entity/   ← WorkoutEntity
+│       ├── adapter/output/persistence/mapper/   ← WorkoutPersistenceMapper
+│       ├── adapter/output/persistence/repository/ ← SpringWorkoutRepository
+│       └── config/             ← WorkoutConfig
+│
+├── exerciseseries/
+│   ├── domain/
+│   │   ├── model/          ← ExerciseSeries, ExerciseSeriesId
+│   │   └── exception/      ← ExerciseSeriesNotFoundException
+│   ├── application/
+│   │   ├── port/input/command/ ← AddExerciseToWorkoutUseCase, RemoveExerciseFromWorkoutUseCase
+│   │   ├── port/input/query/   ← GetExerciseSeriesByIdUseCase, ListExerciseSeriesByWorkoutUseCase
+│   │   ├── port/output/        ← ExerciseSeriesRepositoryPort, ExerciseSeriesQueryPort
+│   │   ├── command/            ← AddExerciseToWorkoutHandler, RemoveExerciseFromWorkoutHandler
+│   │   ├── query/              ← GetExerciseSeriesByIdHandler, ListExerciseSeriesByWorkoutHandler
+│   │   └── dto/                ← Commands, Queries, ExerciseSeriesDetailView
+│   └── infrastructure/
+│       ├── adapter/input/rest/             ← ExerciseSeriesController, DTOs, ExerciseSeriesRestMapper
+│       ├── adapter/output/persistence/     ← ExerciseSeriesJpaAdapter
+│       ├── adapter/output/persistence/entity/   ← ExerciseSeriesEntity
+│       ├── adapter/output/persistence/mapper/   ← ExerciseSeriesPersistenceMapper
+│       ├── adapter/output/persistence/repository/ ← SpringExerciseSeriesRepository
+│       └── config/             ← ExerciseSeriesConfig
+│
+└── series/
+    ├── domain/
+    │   ├── model/          ← Series, SeriesId, RestTime
+    │   ├── event/          ← SeriesEvent, SeriesCreated
+    │   └── exception/      ← SeriesNotFoundException
+    ├── application/
+    │   ├── port/input/command/ ← RecordSeriesUseCase, UpdateSeriesUseCase, DeleteSeriesUseCase
+    │   ├── port/input/query/   ← GetSeriesByIdUseCase, ListSeriesByExerciseSeriesUseCase
+    │   ├── port/output/        ← SeriesRepositoryPort, SeriesQueryPort
+    │   ├── command/            ← RecordSeriesHandler, UpdateSeriesHandler, DeleteSeriesHandler
+    │   ├── query/              ← GetSeriesByIdHandler, ListSeriesByExerciseSeriesHandler
+    │   └── dto/                ← Commands, Queries, SeriesDetailView, SeriesSummaryView
+    └── infrastructure/
+        ├── adapter/input/rest/             ← SeriesController, DTOs, SeriesRestMapper
+        ├── adapter/output/persistence/     ← SeriesJpaAdapter
+        ├── adapter/output/persistence/entity/   ← SeriesEntity
+        ├── adapter/output/persistence/mapper/   ← SeriesPersistenceMapper
+        ├── adapter/output/persistence/repository/ ← SpringSeriesRepository
+        └── config/             ← SeriesConfig
 
-application/src/main/java/com/n1b3lung0/gymrat/
-  application/
-    port/
-      input/
-        command/    ← *UseCase interfaces (write side)
-        query/      ← *UseCase interfaces (read side)
-      output/       ← *QueryPort, DomainEventPublisherPort
-    command/        ← *Handler (write)
-    query/          ← *Handler (read)
-    dto/            ← Commands, Queries, *View records
-
-infrastructure/src/main/java/com/n1b3lung0/gymrat/
-  infrastructure/
-    adapter/
-      input/
-        rest/       ← *Controller, GlobalExceptionHandler
-        rest/dto/   ← *Request, *Response, PageResponse
-        rest/mapper/← *RestMapper
-      output/
-        persistence/        ← *JpaAdapter
-        persistence/entity/ ← *Entity, AuditEmbeddable
-        persistence/mapper/ ← *PersistenceMapper
-        persistence/repository/ ← Spring*Repository
-        messaging/          ← SpringDomainEventPublisher
-    config/         ← *Config (bean registration), PersistenceConfig, OpenApiConfig
+src/main/resources/
+    application.yaml
+    db/migration/       ← V1–V6 Flyway migrations (unchanged location)
 ```
 
 ---

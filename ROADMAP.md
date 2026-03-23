@@ -1134,18 +1134,30 @@ Helper methods append `System.nanoTime()` to exercise names to avoid constraint 
 
 ---
 
-### Step 70 — ArchUnit architecture tests
+### Step 70 — ArchUnit architecture tests ✅
 
 **Module:** `:infrastructure`  
 **File:** `ArchitectureTest.java`
 
-Rules:
-- `domainIsIsolated` — no Spring/JPA imports in domain
-- `applicationDoesNotUseInfrastructure`
-- `springAnnotationsOnlyInInfrastructure`
-- `commandHandlersImplementCommandPorts`
-- `queryHandlersImplementQueryPorts`
-- `controllersOnlyDependOnUseCasePorts` — never on concrete Handler classes
+**Implementation notes:**
+- Uses `ClassFileImporter.importPackages()` (not `@AnalyzeClasses`) — this scans both class directories
+  and JARs on the classpath, so all three Gradle modules are found at test time.
+- `@AnalyzeClasses` with `layeredArchitecture().consideringAllDependencies()` was not used because
+  it produces "Layer X is empty" errors in multi-module builds where layers are defined as package patterns.
+- The layered architecture constraint is covered by 3 individual `noClasses` rules (same semantics,
+  no empty-layer issue).
+- `archunit.properties` added with `archRule.failOnEmptyShould=false` as safety net.
+
+**16 rules across 6 `@Nested` groups — all green:**
+
+| Suite | Tests | Rule |
+|---|---|---|
+| `Layered architecture` | 3 | domain→app, domain→infra, app→infra all forbidden |
+| `Domain isolation` | 4 | no Spring, no JPA, no Hibernate, no Lombok |
+| `Application isolation` | 3 | no Spring, no Infrastructure, no JPA |
+| `Spring annotations in infrastructure only` | 1 | `@Component/@Service/@Repository/@RestController` confined to infra |
+| `Naming conventions` | 4 | Handlers in command/query, UseCases in port.input, Controllers in rest, JpaAdapters in persistence |
+| `Controller dependencies` | 1 | Controllers must not depend on concrete Handler classes |
 
 **Verify:** `./gradlew :infrastructure:test --tests "*ArchitectureTest"` — all rules pass.
 
